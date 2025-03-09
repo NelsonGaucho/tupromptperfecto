@@ -4,7 +4,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # O master, dependiendo de tu rama principal
+      - main
 
 jobs:
   build-and-deploy:
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # O la versión que estés utilizando
+          node-version: '18'
           cache: 'npm'
 
       - name: Install dependencies
@@ -25,9 +25,15 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Create .nojekyll file
+        run: touch dist/.nojekyll
+
+      - name: Copy CNAME file to dist
+        run: cp CNAME dist/ || echo "No CNAME file found"
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages # La rama donde se desplegará el contenido
-          folder: dist # La carpeta que contiene los archivos a desplegar
-          clean: true # Limpia la rama antes de desplegar
+          branch: gh-pages
+          folder: dist
+          clean: true
