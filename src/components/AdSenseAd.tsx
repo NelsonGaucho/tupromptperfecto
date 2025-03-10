@@ -26,7 +26,6 @@ const AdSenseAd = ({ adSlot, adFormat = 'auto', style, className }: AdSenseAdPro
   return (
     <div className={`adsbygoogle-container my-4 ${className || ''}`}>
       <ins
-        ref={adRef}
         className="adsbygoogle"
         style={style || { display: 'block' }}
         data-ad-client="ca-pub-8324508117855814"
