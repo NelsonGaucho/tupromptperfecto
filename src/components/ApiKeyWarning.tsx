@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { AlertTriangle } from 'lucide-react';
 
 interface ApiKeyWarningProps {
   apiName: string;
@@ -11,7 +11,7 @@ interface ApiKeyWarningProps {
 const ApiKeyWarning: React.FC<ApiKeyWarningProps> = ({ apiName, onClose }) => {
   return (
     <Alert variant="destructive" className="mb-4">
-      <ExclamationTriangleIcon className="h-4 w-4" />
+      <AlertTriangle className="h-4 w-4" />
       <AlertTitle>Error de API</AlertTitle>
       <AlertDescription>
         No se pudo conectar a la API de {apiName}. Es posible que la clave API haya expirado o sea incorrecta. 

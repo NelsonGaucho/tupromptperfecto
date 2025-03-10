@@ -24,7 +24,7 @@ const AdSenseAd = ({ adSlot, adFormat = 'auto', style, className }: AdSenseAdPro
   }, []);
 
   return (
-    <div className={`adsbygoogle-container my-4 ${className || ''}`}>
+    <div ref={adRef} className={`adsbygoogle-container my-4 ${className || ''}`}>
       <ins
         className="adsbygoogle"
         style={style || { display: 'block' }}
