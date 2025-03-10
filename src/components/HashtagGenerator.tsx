@@ -24,6 +24,7 @@ const HashtagGenerator = ({ platform }: HashtagGeneratorProps) => {
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [popularHashtags, setPopularHashtags] = useState<string[]>([]);
   const [nicheHashtags, setNicheHashtags] = useState<string[]>([]);
+  const [youtubeFormattedHashtags, setYoutubeFormattedHashtags] = useState<string>('');
 
   const platformIcon = {
     instagram: <Instagram className="h-5 w-5 mr-2" />,
@@ -70,6 +71,11 @@ const HashtagGenerator = ({ platform }: HashtagGeneratorProps) => {
       setPopularHashtags(result.popular);
       setNicheHashtags(result.niche);
       
+      // Set YouTube formatted hashtags if available
+      if (platform === 'youtube' && result.formattedForYoutube) {
+        setYoutubeFormattedHashtags(result.formattedForYoutube);
+      }
+      
       toast({
         title: "¡Hashtags generados!",
         description: `Se han generado ${result.all.length} hashtags para ${platformTitle[platform]}`,
@@ -109,6 +115,11 @@ const HashtagGenerator = ({ platform }: HashtagGeneratorProps) => {
       setHashtags(result.all);
       setPopularHashtags(result.popular);
       setNicheHashtags(result.niche);
+      
+      // Set YouTube formatted hashtags if available
+      if (platform === 'youtube' && result.formattedForYoutube) {
+        setYoutubeFormattedHashtags(result.formattedForYoutube);
+      }
       
       toast({
         title: "¡Hashtags actualizados!",
@@ -201,6 +212,23 @@ const HashtagGenerator = ({ platform }: HashtagGeneratorProps) => {
           
           <Card className="bg-background border-border shadow-sm overflow-hidden">
             <CardContent className="p-6">
+              {platform === 'youtube' && youtubeFormattedHashtags && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-3">Hashtags para YouTube (formato recomendado)</h3>
+                  <div className="bg-muted p-4 rounded-md">
+                    <p className="break-words">{youtubeFormattedHashtags}</p>
+                  </div>
+                  <Button 
+                    variant="secondary" 
+                    className="mt-3 w-full"
+                    onClick={() => copyToClipboard(youtubeFormattedHashtags)}
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copiar hashtags para YouTube
+                  </Button>
+                </div>
+              )}
+            
               <div className="flex flex-wrap gap-2 mb-4">
                 {hashtags.map((tag, index) => (
                   <div 
@@ -304,6 +332,7 @@ const HashtagGenerator = ({ platform }: HashtagGeneratorProps) => {
                 <>
                   <li>YouTube permite hasta 15 hashtags por video.</li>
                   <li>Los primeros 3 hashtags aparecerán sobre el título del video.</li>
+                  <li>Utiliza el formato de hashtags separados por comas sin el símbolo #.</li>
                   <li>Usa hashtags específicos relacionados con el contenido de tu video.</li>
                   <li>No uses demasiados hashtags para evitar parecer spam.</li>
                 </>

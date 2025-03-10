@@ -7,6 +7,7 @@ interface HashtagResult {
   all: string[];
   popular: string[];
   niche: string[];
+  formattedForYoutube?: string; // New property for YouTube format
 }
 
 // Helper function to randomize array elements
@@ -27,6 +28,13 @@ const sanitizeHashtag = (hashtag: string): string => {
     .toLowerCase()
     .replace(/[^\w\d]/g, '')
     .replace(/\s+/g, '');
+};
+
+// Format hashtags specifically for YouTube (comma-separated without # symbol)
+const formatForYoutube = (hashtags: string[]): string => {
+  return hashtags
+    .map(tag => tag.startsWith('#') ? tag.substring(1) : tag)
+    .join(', ');
 };
 
 // Generate hashtags using both our algorithm and OpenAI API
@@ -55,11 +63,18 @@ export const generateHashtags = async (
       const popular = aiHashtags.slice(0, Math.min(10, aiHashtags.length));
       const niche = aiHashtags.slice(10);
       
-      return {
+      const result: HashtagResult = {
         all: aiHashtags,
         popular,
         niche
       };
+      
+      // Add YouTube specific format if platform is YouTube
+      if (platform === 'youtube') {
+        result.formattedForYoutube = formatForYoutube(aiHashtags);
+      }
+      
+      return result;
     }
     
     console.log("AI hashtag generation failed or returned empty results, falling back to algorithm");
@@ -90,7 +105,8 @@ export const generateHashtags = async (
     ],
     youtube: [
       'youtube', 'youtuber', 'video', 'subscribe', 'channel', 'youtubevideo',
-      'youtubers', 'youtubevideos', 'trending', 'viral', 'content', 'creator'
+      'youtubers', 'youtubevideos', 'trending', 'viral', 'content', 'creator',
+      'shorts', 'youtubeshorts', 'videooftheday', 'tutorial'
     ],
     twitter: [
       'twitter', 'tweet', 'x', 'trending', 'viral', 'followme', 'retweet',
@@ -167,9 +183,17 @@ export const generateHashtags = async (
   const formattedPopular = uniquePopular.map(tag => `#${tag}`);
   const formattedNiche = uniqueNiche.map(tag => `#${tag}`);
   
-  return {
+  // Create result object
+  const result: HashtagResult = {
     all: formattedHashtags,
     popular: formattedPopular,
     niche: formattedNiche
   };
+  
+  // Add YouTube specific format if platform is YouTube
+  if (platform === 'youtube') {
+    result.formattedForYoutube = formatForYoutube(formattedHashtags);
+  }
+  
+  return result;
 };

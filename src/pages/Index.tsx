@@ -1,25 +1,13 @@
 
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { setupSecurity } from '@/utils/security';
 import { LanguageProvider } from '@/hooks/useTranslation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PromptGenerator from '@/components/PromptGenerator';
 import AdSenseAd from '@/components/AdSenseAd';
-import ApiKeyWarning from '@/components/ApiKeyWarning';
-import { Button } from '@/components/ui/button';
-import { Settings } from 'lucide-react';
 
 const Index = () => {
-  const [hasApiKey, setHasApiKey] = useState(false);
-  
-  // Verificar si existe una API key al cargar
-  useEffect(() => {
-    const apiKey = localStorage.getItem('openai_api_key');
-    setHasApiKey(!!apiKey);
-  }, []);
-  
   // Set up security measures when the component mounts
   useEffect(() => {
     setupSecurity();
@@ -27,10 +15,10 @@ const Index = () => {
     // Set page title for SEO
     document.title = "TuPromptPerfecto - Genera prompts perfectos para ChatGPT";
     
-    // Set meta tags for SEO
+    // Enhanced meta tags for SEO
     const metaTags = [
       { name: 'description', content: 'Genera prompts perfectos para ChatGPT. Herramienta gratuita para crear prompts optimizados para obtener los mejores resultados con la IA.' },
-      { name: 'keywords', content: 'ChatGPT, prompts, generador de prompts, crear prompts, prompt perfecto, IA, inteligencia artificial, GPT' },
+      { name: 'keywords', content: 'ChatGPT, prompts, generador de prompts, crear prompts, prompt perfecto, IA, inteligencia artificial, GPT, prompt engineering, prompt generator' },
       { property: 'og:title', content: 'TuPromptPerfecto - Genera prompts perfectos para ChatGPT' },
       { property: 'og:description', content: 'Herramienta gratuita para crear prompts perfectos y obtener los mejores resultados con ChatGPT.' },
       { property: 'og:type', content: 'website' },
@@ -38,8 +26,11 @@ const Index = () => {
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: 'TuPromptPerfecto - Genera prompts perfectos para ChatGPT' },
       { name: 'twitter:description', content: 'Herramienta gratuita para crear prompts perfectos y obtener los mejores resultados con ChatGPT.' },
-      { name: 'robots', content: 'index, follow' },
+      { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' },
       { name: 'canonical', content: window.location.href },
+      { name: 'author', content: 'TuPromptPerfecto' },
+      { name: 'language', content: 'Spanish' },
+      { property: 'og:locale', content: 'es_ES' },
     ];
     
     metaTags.forEach(tag => {
@@ -71,22 +62,7 @@ const Index = () => {
             <p className="text-xl text-muted-foreground">
               Genera prompts perfectos para ChatGPT y obtén mejores resultados
             </p>
-            
-            <div className="mt-4">
-              <Link to="/api-settings">
-                <Button variant="outline" size="sm" className="gap-1.5">
-                  <Settings className="h-4 w-4" />
-                  {hasApiKey ? "Configuración de API" : "Configurar API Key"}
-                </Button>
-              </Link>
-            </div>
           </div>
-          
-          {!hasApiKey && (
-            <div className="mb-8">
-              <ApiKeyWarning />
-            </div>
-          )}
           
           <div className="animate-slide-in-up opacity-0 [animation-delay:0.3s] [animation-fill-mode:forwards]">
             <PromptGenerator />
