@@ -1,22 +1,12 @@
 
-// Constantes para las claves de almacenamiento
+// Constante para la clave de almacenamiento
 const OPENAI_KEY_STORAGE = 'openai_api_key';
-const PERPLEXITY_KEY_STORAGE = 'perplexity_api_key';
 
 // Función para obtener la API key de OpenAI (primero del localStorage, luego la que está en el código)
 const getOpenAIKey = (): string => {
   const localKey = localStorage.getItem(OPENAI_KEY_STORAGE);
   // Clave fallback por si no hay una guardada en localStorage
   const fallbackKey = "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";
-  
-  return localKey || fallbackKey;
-};
-
-// Función para obtener la API key de Perplexity (primero del localStorage, luego la que está en el código)
-const getPerplexityKey = (): string => {
-  const localKey = localStorage.getItem(PERPLEXITY_KEY_STORAGE);
-  // Clave fallback por si no hay una guardada en localStorage
-  const fallbackKey = "sk-17004fc0721948948c91a572d9fff500";
   
   return localKey || fallbackKey;
 };
@@ -115,7 +105,7 @@ export const enhanceHashtagsWithAI = async (
   }
 };
 
-// Function to generate better SEO keywords using Perplexity API
+// Function to generate SEO keywords (sin usar Perplexity)
 export const enhanceKeywordsWithAI = async (
   topic: string,
   industry?: string,
@@ -128,43 +118,41 @@ export const enhanceKeywordsWithAI = async (
     [{"keyword": "example keyword", "searchVolume": 1000, "competition": 0.5, "difficulty": 30, "cpc": 1.20}]
     Only include the keyword data, no explanations.`;
 
-    const perplexityKey = getPerplexityKey();
+    const openaiKey = getOpenAIKey();
     
-    if (!perplexityKey) {
+    if (!openaiKey) {
       return {
         success: false,
-        error: "No se ha configurado una API key de Perplexity. Por favor, configúrala en la página de configuración."
+        error: "No se ha configurado una API key de OpenAI. Por favor, configúrala en la página de configuración."
       };
     }
 
-    const response = await fetch('https://api.perplexity.ai/chat/completions', {
-      method: 'POST',
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${perplexityKey}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${openaiKey}`
       },
       body: JSON.stringify({
-        model: 'llama-3.1-sonar-small-128k-online',
+        model: "gpt-4o-mini",
         messages: [
           {
-            role: 'system',
-            content: 'You are an SEO expert who specializes in keyword research and analysis.'
+            role: "system",
+            content: "You are an SEO expert who specializes in keyword research and analysis."
           },
           {
-            role: 'user',
+            role: "user",
             content: prompt
           }
         ],
         temperature: 0.2,
-        max_tokens: 2000,
-        return_images: false,
-        return_related_questions: false,
-      }),
+        max_tokens: 2000
+      })
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Perplexity API error:", errorData);
+      console.error("OpenAI API error:", errorData);
       throw new Error(`API error: ${errorData.error?.message || "Unknown error"}`);
     }
 

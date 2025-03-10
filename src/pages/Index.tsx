@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { setupSecurity } from '@/utils/security';
 import { LanguageProvider } from '@/hooks/useTranslation';
@@ -12,6 +12,14 @@ import { Button } from '@/components/ui/button';
 import { Settings } from 'lucide-react';
 
 const Index = () => {
+  const [hasApiKey, setHasApiKey] = useState(false);
+  
+  // Verificar si existe una API key al cargar
+  useEffect(() => {
+    const apiKey = localStorage.getItem('openai_api_key');
+    setHasApiKey(!!apiKey);
+  }, []);
+  
   // Set up security measures when the component mounts
   useEffect(() => {
     setupSecurity();
@@ -68,15 +76,17 @@ const Index = () => {
               <Link to="/api-settings">
                 <Button variant="outline" size="sm" className="gap-1.5">
                   <Settings className="h-4 w-4" />
-                  Configurar API Keys
+                  {hasApiKey ? "Configuración de API" : "Configurar API Key"}
                 </Button>
               </Link>
             </div>
           </div>
           
-          <div className="mb-8">
-            <ApiKeyWarning />
-          </div>
+          {!hasApiKey && (
+            <div className="mb-8">
+              <ApiKeyWarning />
+            </div>
+          )}
           
           <div className="animate-slide-in-up opacity-0 [animation-delay:0.3s] [animation-fill-mode:forwards]">
             <PromptGenerator />
