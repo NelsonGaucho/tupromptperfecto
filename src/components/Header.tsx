@@ -70,9 +70,7 @@ const Header = () => {
         <Link to="/" className="text-2xl font-display font-semibold text-foreground">
           {t('app.title')}
         </Link>
-        <span className="hidden md:inline-block px-2 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
-          {t('app.subtitle')}
-        </span>
+        {/* Removed the subtitle span that was here */}
       </div>
 
       {/* Desktop Navigation */}
