@@ -1,4 +1,6 @@
+
 import { sanitizeInput } from './security';
+import { enhanceHashtagsWithAI } from '@/services/apiService';
 
 // Interface for hashtag generation result
 interface HashtagResult {
@@ -27,19 +29,46 @@ const sanitizeHashtag = (hashtag: string): string => {
     .replace(/\s+/g, '');
 };
 
-// Generate hashtags using the provided OpenAI API key (this is a mock implementation)
+// Generate hashtags using both our algorithm and OpenAI API
 export const generateHashtags = async (
   platform: 'instagram' | 'youtube' | 'twitter',
   topic: string,
   description?: string
 ): Promise<HashtagResult> => {
-  // In a real implementation, this would call the OpenAI API with the provided API key
-  // For now, this is a simulation to demonstrate the functionality
-  
-  console.log(`Generating ${platform} hashtags for topic: ${topic}`);
-  
   // Sanitize the topic
   const sanitizedTopic = sanitizeInput(topic);
+  
+  // Try to enhance hashtags with AI first
+  try {
+    console.log(`Attempting to generate ${platform} hashtags for topic: ${topic} using AI`);
+    
+    const aiResult = await enhanceHashtagsWithAI(platform, topic);
+    
+    if (aiResult.success && aiResult.data && aiResult.data.length > 0) {
+      console.log(`AI successfully generated ${aiResult.data.length} hashtags`);
+      
+      // Split the AI-generated hashtags into popular and niche
+      const aiHashtags = aiResult.data.map((tag: string) => 
+        tag.startsWith('#') ? tag : `#${tag}`
+      );
+      
+      const popular = aiHashtags.slice(0, Math.min(10, aiHashtags.length));
+      const niche = aiHashtags.slice(10);
+      
+      return {
+        all: aiHashtags,
+        popular,
+        niche
+      };
+    }
+    
+    console.log("AI hashtag generation failed or returned empty results, falling back to algorithm");
+  } catch (error) {
+    console.error("Error with AI hashtag generation:", error);
+    console.log("Falling back to algorithm");
+  }
+  
+  // Fall back to the original algorithm if AI fails
   
   // Set platform-specific variables
   const maxHashtags = platform === 'instagram' ? 30 : platform === 'youtube' ? 15 : 10;
@@ -133,12 +162,14 @@ export const generateHashtags = async (
   // Combine all hashtags
   const allHashtags = [...uniquePopular, ...uniqueNiche, ...shuffledAdditional];
   
-  // Return with a slight delay to simulate API call
-  await new Promise(resolve => setTimeout(resolve, 800));
+  // Add # prefix to all hashtags
+  const formattedHashtags = allHashtags.map(tag => `#${tag}`);
+  const formattedPopular = uniquePopular.map(tag => `#${tag}`);
+  const formattedNiche = uniqueNiche.map(tag => `#${tag}`);
   
   return {
-    all: allHashtags,
-    popular: uniquePopular,
-    niche: uniqueNiche
+    all: formattedHashtags,
+    popular: formattedPopular,
+    niche: formattedNiche
   };
 };

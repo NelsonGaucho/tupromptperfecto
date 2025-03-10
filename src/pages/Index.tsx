@@ -5,6 +5,7 @@ import { LanguageProvider } from '@/hooks/useTranslation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PromptGenerator from '@/components/PromptGenerator';
+import AdSenseAd from '@/components/AdSenseAd';
 
 const Index = () => {
   // Set up security measures when the component mounts
@@ -48,6 +49,9 @@ const Index = () => {
         <Header />
         
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12">
+          {/* Top ad */}
+          <AdSenseAd adSlot="1234567890" className="mb-8" />
+          
           <div className="max-w-3xl mx-auto text-center mb-12 animate-slide-in-up opacity-0 [animation-delay:0.1s] [animation-fill-mode:forwards]">
             <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight mb-4">
               TuPromptPerfecto
@@ -60,6 +64,9 @@ const Index = () => {
           <div className="animate-slide-in-up opacity-0 [animation-delay:0.3s] [animation-fill-mode:forwards]">
             <PromptGenerator />
           </div>
+          
+          {/* Bottom ad */}
+          <AdSenseAd adSlot="0987654321" className="mt-8" />
         </main>
         
         <Footer />

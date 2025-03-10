@@ -1,5 +1,5 @@
-
 import { sanitizeInput } from './security';
+import { enhanceKeywordsWithAI } from '@/services/apiService';
 
 // Interface for keyword data
 interface Keyword {
@@ -130,7 +130,7 @@ const calculateKeywordMetrics = (
   };
 };
 
-// Generate keywords using the provided topic and optional parameters
+// Generate keywords using both our algorithm and Perplexity API
 export const generateKeywords = async (
   topic: string,
   description?: string,
@@ -143,6 +143,27 @@ export const generateKeywords = async (
   const sanitizedDescription = description ? sanitizeInput(description) : '';
   const sanitizedIndustry = industry ? sanitizeInput(industry) : '';
   const sanitizedLocation = location ? sanitizeInput(location) : '';
+  
+  // Try to enhance keywords with AI first
+  try {
+    console.log(`Attempting to generate keywords for topic: ${topic} using AI`);
+    
+    const aiResult = await enhanceKeywordsWithAI(topic, industry);
+    
+    if (aiResult.success && aiResult.data && aiResult.data.length > 0) {
+      console.log(`AI successfully generated ${aiResult.data.length} keywords`);
+      
+      // Return the AI-generated keywords
+      return aiResult.data;
+    }
+    
+    console.log("AI keyword generation failed or returned empty results, falling back to algorithm");
+  } catch (error) {
+    console.error("Error with AI keyword generation:", error);
+    console.log("Falling back to algorithm");
+  }
+  
+  // Fall back to the original algorithm if AI fails
   
   // Split topic into words for keyword combinations
   const topicWords = sanitizedTopic.toLowerCase().split(/\s+/);
@@ -239,9 +260,6 @@ export const generateKeywords = async (
   
   // Sort by search volume by default
   keywordsWithMetrics.sort((a, b) => b.searchVolume - a.searchVolume);
-  
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
   
   return keywordsWithMetrics;
 };
