@@ -2,4 +2,36 @@
 User-agent: *
 Allow: /
 
+# Sitemap file
 Sitemap: https://tupromptperfecto.com/sitemap.xml
+
+# Crawl-delay directive
+Crawl-delay: 5
+
+# Prohibit crawling of private or admin pages
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.js$
+Disallow: /api/
+
+# Allow all content bots can understand
+Allow: /*.html$
+Allow: /*.htm$
+Allow: /*.php$
+Allow: /*.css$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.webp$
+
+# Specific instructions for Google
+User-agent: Googlebot
+Allow: /
+
+# Specific instructions for Bing
+User-agent: Bingbot
+Allow: /
