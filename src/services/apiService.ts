@@ -1,4 +1,3 @@
-
 // API keys
 const OPENAI_API_KEY = "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";
 const PERPLEXITY_API_KEY = "sk-17004fc0721948948c91a572d9fff500";
@@ -156,6 +155,63 @@ export const enhanceKeywordsWithAI = async (
     return {
       success: false,
       error: (error as Error).message || "Failed to generate keywords"
+    };
+  }
+};
+
+// Function to query ChatGPT API
+export const queryChatGPT = async (
+  prompt: string,
+  model: string = "gpt-4o-mini",
+  temperature: number = 0.7
+): Promise<ApiResponse> => {
+  try {
+    // Validate inputs
+    if (!prompt.trim()) {
+      throw new Error("Prompt cannot be empty");
+    }
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        temperature: temperature,
+        max_tokens: 1000
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("OpenAI API error:", errorData);
+      throw new Error(`API error: ${errorData.error?.message || "Unknown error"}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices[0].message.content;
+
+    return {
+      success: true,
+      data: {
+        text: content,
+        model: model,
+        usage: data.usage
+      }
+    };
+  } catch (error) {
+    console.error("Error querying ChatGPT:", error);
+    return {
+      success: false,
+      error: (error as Error).message || "Failed to query ChatGPT"
     };
   }
 };
