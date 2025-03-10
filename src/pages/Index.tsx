@@ -1,11 +1,15 @@
 
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { setupSecurity } from '@/utils/security';
 import { LanguageProvider } from '@/hooks/useTranslation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PromptGenerator from '@/components/PromptGenerator';
 import AdSenseAd from '@/components/AdSenseAd';
+import ApiKeyWarning from '@/components/ApiKeyWarning';
+import { Button } from '@/components/ui/button';
+import { Settings } from 'lucide-react';
 
 const Index = () => {
   // Set up security measures when the component mounts
@@ -59,6 +63,19 @@ const Index = () => {
             <p className="text-xl text-muted-foreground">
               Genera prompts perfectos para ChatGPT y obtén mejores resultados
             </p>
+            
+            <div className="mt-4">
+              <Link to="/api-settings">
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <Settings className="h-4 w-4" />
+                  Configurar API Keys
+                </Button>
+              </Link>
+            </div>
+          </div>
+          
+          <div className="mb-8">
+            <ApiKeyWarning />
           </div>
           
           <div className="animate-slide-in-up opacity-0 [animation-delay:0.3s] [animation-fill-mode:forwards]">

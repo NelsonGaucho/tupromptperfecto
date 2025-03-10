@@ -1,6 +1,25 @@
-// API keys
-const OPENAI_API_KEY = "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";
-const PERPLEXITY_API_KEY = "sk-17004fc0721948948c91a572d9fff500";
+
+// Constantes para las claves de almacenamiento
+const OPENAI_KEY_STORAGE = 'openai_api_key';
+const PERPLEXITY_KEY_STORAGE = 'perplexity_api_key';
+
+// Función para obtener la API key de OpenAI (primero del localStorage, luego la que está en el código)
+const getOpenAIKey = (): string => {
+  const localKey = localStorage.getItem(OPENAI_KEY_STORAGE);
+  // Clave fallback por si no hay una guardada en localStorage
+  const fallbackKey = "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";
+  
+  return localKey || fallbackKey;
+};
+
+// Función para obtener la API key de Perplexity (primero del localStorage, luego la que está en el código)
+const getPerplexityKey = (): string => {
+  const localKey = localStorage.getItem(PERPLEXITY_KEY_STORAGE);
+  // Clave fallback por si no hay una guardada en localStorage
+  const fallbackKey = "sk-17004fc0721948948c91a572d9fff500";
+  
+  return localKey || fallbackKey;
+};
 
 // Interface for API response
 interface ApiResponse {
@@ -20,11 +39,20 @@ export const enhanceHashtagsWithAI = async (
     Include a mix of popular and niche hashtags to maximize reach. 
     Format the result as a JSON array of strings. Only include the hashtags, no explanations.`;
 
+    const openaiKey = getOpenAIKey();
+    
+    if (!openaiKey) {
+      return {
+        success: false,
+        error: "No se ha configurado una API key de OpenAI. Por favor, configúrala en la página de configuración."
+      };
+    }
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`
+        "Authorization": `Bearer ${openaiKey}`
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
@@ -100,10 +128,19 @@ export const enhanceKeywordsWithAI = async (
     [{"keyword": "example keyword", "searchVolume": 1000, "competition": 0.5, "difficulty": 30, "cpc": 1.20}]
     Only include the keyword data, no explanations.`;
 
+    const perplexityKey = getPerplexityKey();
+    
+    if (!perplexityKey) {
+      return {
+        success: false,
+        error: "No se ha configurado una API key de Perplexity. Por favor, configúrala en la página de configuración."
+      };
+    }
+
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
+        'Authorization': `Bearer ${perplexityKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -171,11 +208,20 @@ export const queryChatGPT = async (
       throw new Error("Prompt cannot be empty");
     }
 
+    const openaiKey = getOpenAIKey();
+    
+    if (!openaiKey) {
+      return {
+        success: false,
+        error: "No se ha configurado una API key de OpenAI. Por favor, configúrala en la página de configuración."
+      };
+    }
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`
+        "Authorization": `Bearer ${openaiKey}`
       },
       body: JSON.stringify({
         model: model,
