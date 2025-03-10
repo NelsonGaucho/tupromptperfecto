@@ -4,11 +4,11 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
 
 interface ApiKeyWarningProps {
-  apiName: string;
+  apiName?: string;
   onClose?: () => void;
 }
 
-const ApiKeyWarning: React.FC<ApiKeyWarningProps> = ({ apiName, onClose }) => {
+const ApiKeyWarning: React.FC<ApiKeyWarningProps> = ({ apiName = "OpenAI", onClose }) => {
   return (
     <Alert variant="destructive" className="mb-4">
       <AlertTriangle className="h-4 w-4" />

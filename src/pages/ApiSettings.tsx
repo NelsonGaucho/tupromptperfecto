@@ -118,10 +118,11 @@ const ApiSettings = () => {
               Estas claves se almacenarán de forma segura en tu navegador y nunca se compartirán.
             </p>
             
-            <Alert className="mb-6 bg-amber-50 border-amber-200">
-              <AlertTriangle className="h-4 w-4 text-amber-600" />
-              <AlertDescription className="text-amber-800">
+            <Alert className="mb-6 bg-amber-50 border-amber-200 dark:bg-amber-950 dark:border-amber-900">
+              <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              <AlertDescription className="text-amber-800 dark:text-amber-300">
                 Las API keys son privadas. No las compartas con nadie. TuPromptPerfecto nunca enviará tus claves a ningún servidor.
+                Tus claves se almacenan solo en tu dispositivo mediante localStorage.
               </AlertDescription>
             </Alert>
           </div>
@@ -148,7 +149,7 @@ const ApiSettings = () => {
                     />
                   </div>
                   {openaiKeyStored && (
-                    <div className="flex items-center text-sm text-green-600">
+                    <div className="flex items-center text-sm text-green-600 dark:text-green-400">
                       <CheckCircle className="mr-1 h-4 w-4" />
                       API key guardada
                     </div>
@@ -186,7 +187,7 @@ const ApiSettings = () => {
                     />
                   </div>
                   {perplexityKeyStored && (
-                    <div className="flex items-center text-sm text-green-600">
+                    <div className="flex items-center text-sm text-green-600 dark:text-green-400">
                       <CheckCircle className="mr-1 h-4 w-4" />
                       API key guardada
                     </div>

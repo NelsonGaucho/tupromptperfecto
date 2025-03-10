@@ -13,6 +13,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import LegalNotice from "./pages/LegalNotice";
 import NotFound from "./pages/NotFound";
+import ApiSettings from "./pages/ApiSettings";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/youtube-hashtags" element={<YoutubeHashtags />} />
           <Route path="/x-hashtags" element={<XHashtags />} />
           <Route path="/seo-keywords" element={<SEOKeywords />} />
+          <Route path="/api-settings" element={<ApiSettings />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/legal-notice" element={<LegalNotice />} />
