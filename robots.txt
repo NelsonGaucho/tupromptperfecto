@@ -35,3 +35,4 @@ Allow: /
 # Specific instructions for Bing
 User-agent: Bingbot
 Allow: /
+
