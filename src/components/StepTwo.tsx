@@ -39,8 +39,6 @@ const StepTwo = ({ onBack, onGenerate, initialData }: StepTwoProps) => {
   const [audience, setAudience] = useState<string>(initialData?.audience || '');
   const [formatRequirements, setFormatRequirements] = useState<string>(initialData?.formatRequirements || '');
   const [additionalNotes, setAdditionalNotes] = useState<string>(initialData?.additionalNotes || '');
-  
-  // Animation state
   const [isVisible, setIsVisible] = useState<boolean>(false);
   
   useEffect(() => {
@@ -48,7 +46,6 @@ const StepTwo = ({ onBack, onGenerate, initialData }: StepTwoProps) => {
   }, []);
 
   const handleGenerate = () => {
-    // Sanitize all inputs
     onGenerate({
       toneStyle: sanitizeInput(toneStyle),
       contentLength: sanitizeInput(contentLength),

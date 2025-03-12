@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from '../hooks/useTranslation';
 import StepOne from './StepOne';
 import StepTwo from './StepTwo';
@@ -36,7 +36,6 @@ const PromptGenerator = () => {
 
   const handleStepOneComplete = (data: { promptType: string; promptDescription: string }) => {
     setExiting(true);
-    
     setTimeout(() => {
       setPromptData(prevData => ({
         ...prevData,
@@ -49,7 +48,6 @@ const PromptGenerator = () => {
 
   const handleBackToStepOne = () => {
     setExiting(true);
-    
     setTimeout(() => {
       setCurrentStep(1);
       setExiting(false);
@@ -64,7 +62,6 @@ const PromptGenerator = () => {
     additionalNotes: string;
   }) => {
     setExiting(true);
-    
     setTimeout(() => {
       const updatedPromptData = {
         ...promptData,
@@ -73,29 +70,24 @@ const PromptGenerator = () => {
       
       setPromptData(updatedPromptData);
       
-      // Generate the prompt
       const prompt = generatePrompt(updatedPromptData);
       setGeneratedPrompt(prompt);
       
-      // Generate tips based on prompt type
       const tips = generateTips(updatedPromptData.promptType);
       setPromptTips(tips);
       
-      // Move to result step
       setCurrentStep(3);
       setExiting(false);
       
-      // Show success toast
       toast({
-        title: "Prompt generated successfully!",
-        description: "Your perfect prompt is ready to use with ChatGPT.",
+        title: t('result.success'),
+        description: t('result.ready'),
       });
     }, 300);
   };
 
   const handleReset = () => {
     setExiting(true);
-    
     setTimeout(() => {
       setPromptData({
         promptType: '',
@@ -115,7 +107,6 @@ const PromptGenerator = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      {/* Progress indicator */}
       {currentStep < 3 && (
         <div className="mb-8">
           <div className="flex items-center justify-between relative">
@@ -142,7 +133,6 @@ const PromptGenerator = () => {
         </div>
       )}
 
-      {/* Content */}
       <div className={`bg-background border border-border rounded-xl shadow-sm p-6 md:p-8 overflow-hidden transition-all duration-300 ${exiting ? 'opacity-0 transform translate-y-4' : 'opacity-100 transform translate-y-0'}`}>
         {currentStep === 1 && (
           <StepOne

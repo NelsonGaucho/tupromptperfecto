@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../hooks/useTranslation';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -42,7 +41,6 @@ const StepOne = ({ onContinue, initialData }: StepOneProps) => {
     }
     
     setError(null);
-    
     onContinue({
       promptType: sanitizeInput(promptType),
       promptDescription: sanitizeInput(promptDescription)
@@ -67,39 +65,23 @@ const StepOne = ({ onContinue, initialData }: StepOneProps) => {
             value={promptType} 
             onValueChange={setPromptType}
           >
-            <SelectTrigger id="promptType" className="w-full">
+            <SelectTrigger id="promptType">
               <SelectValue placeholder={t('step1.category.placeholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="creative">
-                {t('step1.category.creative')}
-              </SelectItem>
-              <SelectItem value="technical">
-                {t('step1.category.technical')}
-              </SelectItem>
-              <SelectItem value="business">
-                {t('step1.category.business')}
-              </SelectItem>
-              <SelectItem value="academic">
-                {t('step1.category.academic')}
-              </SelectItem>
-              <SelectItem value="personal">
-                {t('step1.category.personal')}
-              </SelectItem>
-              <SelectItem value="educational">
-                {t('step1.category.educational')}
-              </SelectItem>
-              <SelectItem value="other">
-                {t('step1.category.other')}
-              </SelectItem>
+              <SelectItem value="creative">{t('step1.category.creative')}</SelectItem>
+              <SelectItem value="technical">{t('step1.category.technical')}</SelectItem>
+              <SelectItem value="business">{t('step1.category.business')}</SelectItem>
+              <SelectItem value="academic">{t('step1.category.academic')}</SelectItem>
+              <SelectItem value="personal">{t('step1.category.personal')}</SelectItem>
+              <SelectItem value="educational">{t('step1.category.educational')}</SelectItem>
+              <SelectItem value="other">{t('step1.category.other')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="promptDescription">
-            {t('step1.description.label')}
-          </Label>
+          <Label htmlFor="promptDescription">{t('step1.description.label')}</Label>
           <Textarea
             id="promptDescription"
             placeholder={t('step1.description.placeholder')}
