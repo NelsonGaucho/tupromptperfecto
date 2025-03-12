@@ -21,7 +21,7 @@ export function usePromptGenerator() {
       console.error('Error fetching categories:', err);
       setError('Error al cargar las categorías');
     } finally {
-      setLoading = false;
+      setLoading(false); // Corrected: using setLoading as a function instead of reassigning
     }
   };
 
