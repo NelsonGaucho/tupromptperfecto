@@ -5,20 +5,23 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2, CheckCircle, XCircle, Database } from 'lucide-react';
+import { Json } from '@/integrations/supabase/types';
+
+interface PolicyInfo {
+  policyname: string;
+  permissive: boolean;
+  roles: string[];
+  cmd: string;
+  qual: string;
+  with_check: string;
+}
 
 interface SchemaInfo {
   table_schema: string;
   table_name: string;
   row_count: number;
   has_rls: boolean;
-  policies: Array<{
-    policyname: string;
-    permissive: boolean;
-    roles: string[];
-    cmd: string;
-    qual: string;
-    with_check: string;
-  }>;
+  policies: PolicyInfo[];
 }
 
 const SupabaseTest = () => {
@@ -72,7 +75,12 @@ const SupabaseTest = () => {
       }
       
       if (schemaInfo) {
-        setTableInfo(schemaInfo);
+        // Convert the Json type policies to the expected format
+        const typedSchemaInfo: SchemaInfo[] = schemaInfo.map(table => ({
+          ...table,
+          policies: Array.isArray(table.policies) ? table.policies : []
+        }));
+        setTableInfo(typedSchemaInfo);
       }
       
       setTestStatus('success');
@@ -159,7 +167,6 @@ const SupabaseTest = () => {
           disabled={testStatus === 'loading'}
           variant={testStatus === 'error' ? "destructive" : "default"}
         >
-          {testStatus === 'loading' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {testStatus === 'idle' && 'Verificar conexión con Supabase'}
           {testStatus === 'loading' && 'Verificando...'}
           {testStatus === 'success' && 'Verificar de nuevo'}
