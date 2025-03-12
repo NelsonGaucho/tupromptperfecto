@@ -23,31 +23,25 @@ const LanguageContext = createContext<LanguageContextType>({
 });
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  // Try to detect browser language or use stored preference
-  const detectLanguage = (): string => {
+  const [language, setLanguageState] = useState<string>('en');
+
+  useEffect(() => {
     // Check localStorage first
     const storedLang = localStorage.getItem('language');
     if (storedLang && availableLanguages.some(lang => lang.code === storedLang)) {
-      return storedLang;
+      setLanguageState(storedLang);
+    } else {
+      // Detect browser language
+      const browserLang = navigator.language.split('-')[0];
+      
+      // Check if we support the browser language
+      if (availableLanguages.some(lang => lang.code === browserLang)) {
+        setLanguageState(browserLang);
+      }
     }
     
-    // Detect browser language
-    const browserLang = navigator.language.split('-')[0];
-    
-    // Check if we support the browser language
-    if (availableLanguages.some(lang => lang.code === browserLang)) {
-      return browserLang;
-    }
-    
-    // Default to English
-    return 'en';
-  };
-
-  const [language, setLanguageState] = useState<string>('en'); // Initialize with default
-
-  useEffect(() => {
-    // Detect language after component mounts to avoid SSR issues
-    setLanguageState(detectLanguage());
+    // Set the HTML lang attribute
+    document.documentElement.lang = language;
   }, []);
 
   const setLanguage = (lang: string) => {
@@ -56,32 +50,20 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     document.documentElement.lang = lang;
   };
 
-  // Initialize language
-  useEffect(() => {
-    document.documentElement.lang = language;
-  }, [language]);
-
   // Translation function
   const t = (key: string): string => {
-    if (!key) return '';
-    
-    try {
-      if (language && translations[language] && translations[language][key]) {
-        return translations[language][key];
-      }
-      
-      // Fallback to English
-      if (translations['en'] && translations['en'][key]) {
-        return translations['en'][key];
-      }
-      
-      // Return the key itself if not found
-      console.warn(`Translation missing for key: ${key}`);
-      return key;
-    } catch (error) {
-      console.error(`Error fetching translation for key: ${key}`, error);
-      return key;
+    if (translations[language] && translations[language][key]) {
+      return translations[language][key];
     }
+    
+    // Fallback to English
+    if (translations['en'] && translations['en'][key]) {
+      return translations['en'][key];
+    }
+    
+    // Return the key itself if not found
+    console.log(`Translation missing for key: ${key}`);
+    return key;
   };
 
   return (

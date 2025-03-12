@@ -27,12 +27,6 @@ const StepOne = ({ onContinue, initialData }: StepOneProps) => {
   
   useEffect(() => {
     setIsVisible(true);
-    console.log("Translation keys:", {
-      title: t('step1.title'),
-      description: t('step1.description'),
-      categoryLabel: t('step1.category.label'),
-      categoryPlaceholder: t('step1.category.placeholder'),
-    });
   }, []);
 
   const handleContinue = () => {
