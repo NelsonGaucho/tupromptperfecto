@@ -7,6 +7,8 @@ export function usePromptGenerator() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [updateStatus, setUpdateStatus] = useState<{success?: boolean; message?: string; stats?: any} | null>(null);
 
   const fetchCategories = async () => {
     try {
@@ -66,6 +68,50 @@ export function usePromptGenerator() {
     }
   };
 
+  // Función para actualizar manualmente las palabras clave trending
+  const updateTrendingKeywords = async () => {
+    try {
+      setIsUpdating(true);
+      setUpdateStatus(null);
+      
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/update_trending_keywords`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          }
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Error al actualizar: ${response.statusText}`);
+      }
+      
+      const result = await response.json();
+      setUpdateStatus({
+        success: result.success,
+        message: result.message,
+        stats: result.stats
+      });
+      
+      // Si la actualización fue exitosa, recargar categorías
+      if (result.success) {
+        await fetchCategories();
+      }
+      
+    } catch (err) {
+      console.error('Error updating trending keywords:', err);
+      setUpdateStatus({
+        success: false,
+        message: err instanceof Error ? err.message : 'Error desconocido'
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -75,5 +121,8 @@ export function usePromptGenerator() {
     loading,
     error,
     generatePrompt,
+    updateTrendingKeywords,
+    isUpdating,
+    updateStatus
   };
 }

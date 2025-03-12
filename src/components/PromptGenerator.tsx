@@ -13,10 +13,18 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { Copy } from 'lucide-react';
+import { Copy, RefreshCw } from 'lucide-react';
 
 export default function PromptGenerator() {
-  const { categories, loading, error, generatePrompt } = usePromptGenerator();
+  const { 
+    categories, 
+    loading, 
+    error, 
+    generatePrompt, 
+    updateTrendingKeywords, 
+    isUpdating, 
+    updateStatus 
+  } = usePromptGenerator();
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [keywords, setKeywords] = useState<string>('');
   const [generatedPrompt, setGeneratedPrompt] = useState<string>('');
@@ -52,12 +60,59 @@ export default function PromptGenerator() {
     });
   };
 
+  const handleUpdateKeywords = async () => {
+    try {
+      await updateTrendingKeywords();
+      toast({
+        title: "Actualización iniciada",
+        description: "Estamos obteniendo keywords de tendencia, esto puede tomar un momento..."
+      });
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "No se pudieron actualizar las keywords de tendencia",
+        variant: "destructive"
+      });
+    }
+  };
+
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="grid gap-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold">Generador de Prompts SEO</h2>
+          <Button 
+            variant="outline" 
+            onClick={handleUpdateKeywords} 
+            disabled={isUpdating}
+            className="flex items-center gap-2"
+          >
+            <RefreshCw className={`h-4 w-4 ${isUpdating ? 'animate-spin' : ''}`} />
+            {isUpdating ? 'Actualizando...' : 'Actualizar Keywords'}
+          </Button>
+        </div>
+
+        {updateStatus && (
+          <Card className={`p-4 ${updateStatus.success ? 'bg-green-50' : 'bg-red-50'}`}>
+            <p className="font-medium">{updateStatus.success ? '✅ Actualización exitosa' : '❌ Error en la actualización'}</p>
+            <p>{updateStatus.message}</p>
+            {updateStatus.stats && (
+              <div className="mt-2 text-sm">
+                <p>Keywords obtenidas:</p>
+                <ul className="list-disc pl-5">
+                  <li>Google Trends: {updateStatus.stats.googleTrends}</li>
+                  <li>Reddit: {updateStatus.stats.reddit}</li>
+                  <li>AnswerThePublic: {updateStatus.stats.answerThePublic}</li>
+                  <li>Total: {updateStatus.stats.total}</li>
+                </ul>
+              </div>
+            )}
+          </Card>
+        )}
+
         <div className="space-y-2">
           <Label htmlFor="category">Categoría del Prompt</Label>
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
