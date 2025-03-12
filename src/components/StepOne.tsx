@@ -24,8 +24,6 @@ const StepOne = ({ onContinue, initialData }: StepOneProps) => {
   const [promptType, setPromptType] = useState<string>(initialData?.promptType || '');
   const [promptDescription, setPromptDescription] = useState<string>(initialData?.promptDescription || '');
   const [error, setError] = useState<string | null>(null);
-
-  // Animation state
   const [isVisible, setIsVisible] = useState<boolean>(false);
   
   useEffect(() => {
@@ -33,21 +31,18 @@ const StepOne = ({ onContinue, initialData }: StepOneProps) => {
   }, []);
 
   const handleContinue = () => {
-    // Basic validation
     if (!promptType) {
       setError(t('step1.category.placeholder'));
       return;
     }
     
     if (promptDescription.trim().length < 20) {
-      setError('Please provide a more detailed description (minimum 20 characters).');
+      setError(t('step1.description.minLength'));
       return;
     }
     
-    // Clear any errors
     setError(null);
     
-    // Sanitize inputs before passing them up
     onContinue({
       promptType: sanitizeInput(promptType),
       promptDescription: sanitizeInput(promptDescription)
@@ -76,19 +71,35 @@ const StepOne = ({ onContinue, initialData }: StepOneProps) => {
               <SelectValue placeholder={t('step1.category.placeholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="creative">{t('step1.category.creative')}</SelectItem>
-              <SelectItem value="technical">{t('step1.category.technical')}</SelectItem>
-              <SelectItem value="business">{t('step1.category.business')}</SelectItem>
-              <SelectItem value="academic">{t('step1.category.academic')}</SelectItem>
-              <SelectItem value="personal">{t('step1.category.personal')}</SelectItem>
-              <SelectItem value="educational">{t('step1.category.educational')}</SelectItem>
-              <SelectItem value="other">{t('step1.category.other')}</SelectItem>
+              <SelectItem value="creative">
+                {t('step1.category.creative')}
+              </SelectItem>
+              <SelectItem value="technical">
+                {t('step1.category.technical')}
+              </SelectItem>
+              <SelectItem value="business">
+                {t('step1.category.business')}
+              </SelectItem>
+              <SelectItem value="academic">
+                {t('step1.category.academic')}
+              </SelectItem>
+              <SelectItem value="personal">
+                {t('step1.category.personal')}
+              </SelectItem>
+              <SelectItem value="educational">
+                {t('step1.category.educational')}
+              </SelectItem>
+              <SelectItem value="other">
+                {t('step1.category.other')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="promptDescription">{t('step1.description.label')}</Label>
+          <Label htmlFor="promptDescription">
+            {t('step1.description.label')}
+          </Label>
           <Textarea
             id="promptDescription"
             placeholder={t('step1.description.placeholder')}
