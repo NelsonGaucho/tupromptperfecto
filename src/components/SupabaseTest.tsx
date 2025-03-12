@@ -1,22 +1,37 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2, CheckCircle, XCircle, Database } from 'lucide-react';
 
+interface SchemaInfo {
+  table_schema: string;
+  table_name: string;
+  row_count: number;
+  has_rls: boolean;
+  policies: Array<{
+    policyname: string;
+    permissive: boolean;
+    roles: string[];
+    cmd: string;
+    qual: string;
+    with_check: string;
+  }>;
+}
+
 const SupabaseTest = () => {
   const [testStatus, setTestStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [tableInfo, setTableInfo] = useState<Array<any>>([]);
+  const [tableInfo, setTableInfo] = useState<SchemaInfo[]>([]);
 
   const runTest = async () => {
     setTestStatus('loading');
     setErrorMessage(null);
     
     try {
-      // Test 1: Comprobar conectividad
+      // Test 1: Verificar conectividad
       const { data: tables, error: tablesError } = await supabase
         .from('rls')
         .select('*')
@@ -50,10 +65,13 @@ const SupabaseTest = () => {
       
       // Obtener información de tablas disponibles
       const { data: schemaInfo, error: schemaError } = await supabase
-        .rpc('get_schema_info')
-        .select();
+        .rpc('get_schema_info');
       
-      if (!schemaError && schemaInfo) {
+      if (schemaError) {
+        throw new Error(`Error al obtener información del esquema: ${schemaError.message}`);
+      }
+      
+      if (schemaInfo) {
         setTableInfo(schemaInfo);
       }
       
@@ -101,7 +119,19 @@ const SupabaseTest = () => {
                   <p className="font-semibold">Tablas disponibles:</p>
                   <ul className="list-disc list-inside text-sm space-y-1 mt-1">
                     {tableInfo.map((table, index) => (
-                      <li key={index}>{table.table_name} ({table.row_count} filas)</li>
+                      <li key={index}>
+                        {table.table_name} ({table.row_count} filas)
+                        {table.has_rls && ' - RLS activado'}
+                        {table.policies.length > 0 && (
+                          <ul className="ml-4 list-circle text-xs mt-1">
+                            {table.policies.map((policy, pIndex) => (
+                              <li key={pIndex}>
+                                {policy.policyname} ({policy.cmd})
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
                     ))}
                   </ul>
                 </div>

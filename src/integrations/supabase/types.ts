@@ -29,7 +29,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_schema_info: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          table_schema: string
+          table_name: string
+          row_count: number
+          has_rls: boolean
+          policies: Json
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
