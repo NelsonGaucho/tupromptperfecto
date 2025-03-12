@@ -43,7 +43,12 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     return 'en';
   };
 
-  const [language, setLanguageState] = useState<string>(detectLanguage());
+  const [language, setLanguageState] = useState<string>('en'); // Initialize with default
+
+  useEffect(() => {
+    // Detect language after component mounts to avoid SSR issues
+    setLanguageState(detectLanguage());
+  }, []);
 
   const setLanguage = (lang: string) => {
     localStorage.setItem('language', lang);
@@ -54,21 +59,29 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   // Initialize language
   useEffect(() => {
     document.documentElement.lang = language;
-  }, []);
+  }, [language]);
 
   // Translation function
   const t = (key: string): string => {
-    if (translations[language] && translations[language][key]) {
-      return translations[language][key];
-    }
+    if (!key) return '';
     
-    // Fallback to English
-    if (translations['en'] && translations['en'][key]) {
-      return translations['en'][key];
+    try {
+      if (language && translations[language] && translations[language][key]) {
+        return translations[language][key];
+      }
+      
+      // Fallback to English
+      if (translations['en'] && translations['en'][key]) {
+        return translations['en'][key];
+      }
+      
+      // Return the key itself if not found
+      console.warn(`Translation missing for key: ${key}`);
+      return key;
+    } catch (error) {
+      console.error(`Error fetching translation for key: ${key}`, error);
+      return key;
     }
-    
-    // Return the key itself if not found
-    return key;
   };
 
   return (

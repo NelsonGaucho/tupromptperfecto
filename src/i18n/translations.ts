@@ -26,6 +26,7 @@ const translations: Translations = {
     "step1.category.other": "Other (specify in the description)",
     "step1.description.label": "Describe as detailed as possible what you need:",
     "step1.description.placeholder": "Example: I need to create a prompt to generate short science fiction stories set on Mars in the year 2150, with a focus on technological challenges and human relationships...",
+    "step1.description.minLength": "Description should be at least 20 characters long",
     "step1.continue": "Continue",
     
     // Step 2
@@ -59,6 +60,8 @@ const translations: Translations = {
     "result.copied": "Copied!",
     "result.tips.title": "Tips for using your prompt:",
     "result.new": "Create New Prompt",
+    "result.success": "Success!",
+    "result.ready": "Your prompt is ready to use.",
     
     // General Tips
     "tips.general1": "You can modify specific parts to adjust it to your exact needs.",
@@ -119,6 +122,7 @@ const translations: Translations = {
     "step1.category.other": "Otro (especificar en la descripción)",
     "step1.description.label": "Describe lo más detalladamente posible lo que necesitas:",
     "step1.description.placeholder": "Ejemplo: Necesito crear un prompt para generar historias cortas de ciencia ficción ambientadas en Marte en el año 2150, con un enfoque en los desafíos tecnológicos y las relaciones humanas...",
+    "step1.description.minLength": "La descripción debe tener al menos 20 caracteres",
     "step1.continue": "Continuar",
     
     // Step 2
@@ -152,6 +156,8 @@ const translations: Translations = {
     "result.copied": "¡Copiado!",
     "result.tips.title": "Consejos para usar tu prompt:",
     "result.new": "Crear Nuevo Prompt",
+    "result.success": "¡Éxito!",
+    "result.ready": "Tu prompt está listo para usar.",
     
     // General Tips
     "tips.general1": "Puedes modificar partes específicas para ajustarlo a tus necesidades exactas.",
