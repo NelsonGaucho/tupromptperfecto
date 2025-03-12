@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import Header from '@/components/Header';
@@ -5,9 +6,6 @@ import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Rocket, Instagram, Youtube, Twitter, Search } from 'lucide-react';
-
-// Importamos el componente de prueba de Supabase
-import SupabaseTest from '@/components/SupabaseTest';
 
 const Index = () => {
   const { t } = useTranslation();
@@ -23,12 +21,6 @@ const Index = () => {
           <p className="text-lg text-center text-gray-600 dark:text-gray-400">
             {t('La herramienta definitiva para generar hashtags y palabras clave SEO con inteligencia artificial.')}
           </p>
-        </section>
-
-        {/* Sección de prueba de Supabase */}
-        <section className="mb-12 bg-card border rounded-lg p-6">
-          <h2 className="text-2xl font-bold mb-6">Verificación de Supabase</h2>
-          <SupabaseTest />
         </section>
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
