@@ -9,6 +9,80 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      prompt_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      prompt_templates: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          rating: number | null
+          template: string
+          title: string
+          updated_at: string
+          usage_count: number | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          rating?: number | null
+          template: string
+          title: string
+          updated_at?: string
+          usage_count?: number | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          rating?: number | null
+          template?: string
+          title?: string
+          updated_at?: string
+          usage_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_templates_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rls: {
         Row: {
           created_at: string
@@ -23,6 +97,47 @@ export type Database = {
           id?: number
         }
         Relationships: []
+      }
+      trending_keywords: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          id: string
+          keyword: string
+          last_updated: string
+          search_volume: number | null
+          source: string
+          trending_score: number | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          id?: string
+          keyword: string
+          last_updated?: string
+          search_volume?: number | null
+          source: string
+          trending_score?: number | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          id?: string
+          keyword?: string
+          last_updated?: string
+          search_volume?: number | null
+          source?: string
+          trending_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trending_keywords_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
