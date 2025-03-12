@@ -75,11 +75,40 @@ const SupabaseTest = () => {
       }
       
       if (schemaInfo) {
-        // Convert the Json type policies to the expected format
-        const typedSchemaInfo: SchemaInfo[] = schemaInfo.map(table => ({
-          ...table,
-          policies: Array.isArray(table.policies) ? table.policies : []
-        }));
+        // Process the data and convert the policies field to the correct format
+        const typedSchemaInfo: SchemaInfo[] = schemaInfo.map(table => {
+          // Ensure policies is an array and convert each item to PolicyInfo
+          const policies = Array.isArray(table.policies) 
+            ? table.policies.map((policy: Json) => {
+                // Make sure policy is an object before accessing properties
+                if (typeof policy === 'object' && policy !== null) {
+                  return {
+                    policyname: (policy as any).policyname || '',
+                    permissive: Boolean((policy as any).permissive),
+                    roles: Array.isArray((policy as any).roles) ? (policy as any).roles : [],
+                    cmd: (policy as any).cmd || '',
+                    qual: (policy as any).qual || '',
+                    with_check: (policy as any).with_check || ''
+                  };
+                }
+                // Fallback for non-object policy values
+                return {
+                  policyname: '',
+                  permissive: false,
+                  roles: [],
+                  cmd: '',
+                  qual: '',
+                  with_check: ''
+                };
+              })
+            : [];
+          
+          return {
+            ...table,
+            policies
+          };
+        });
+        
         setTableInfo(typedSchemaInfo);
       }
       
