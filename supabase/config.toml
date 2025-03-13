@@ -30,10 +30,8 @@ enabled = true
 enabled = true
 site_url = "http://localhost:3000"
 
-# Fix for the invalid config syntax
 [auth.email]
 enabled = true
-# Remove the nested [[auth.email.flows]] structure
 
 [functions.update_trending_keywords]
 verify_jwt = false
