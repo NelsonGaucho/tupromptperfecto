@@ -1,7 +1,38 @@
 
 import React from 'react';
+import { Copy } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 const PromptUsefulContent = () => {
+  const { toast } = useToast();
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "¡Copiado!",
+      description: "El ejemplo ha sido copiado al portapapeles"
+    });
+  };
+
+  const exampleSEO = `Actúa como un experto en SEO. Crea un artículo completo sobre [tema] optimizado para SEO. 
+Incluye una introducción atractiva, al menos 5 subtítulos H2, bullet points donde sea 
+relevante, y una conclusión. Incorpora de forma natural las siguientes palabras clave: 
+[lista de palabras clave]. El artículo debe tener aproximadamente 1500 palabras y estar 
+dirigido a [audiencia objetivo].`;
+
+  const exampleMarket = `Actúa como un analista de mercado experto en [industria]. Realiza un análisis DAFO 
+(Debilidades, Amenazas, Fortalezas, Oportunidades) detallado para una empresa de [tipo de negocio] 
+que quiere expandirse al mercado de [ubicación]. Incluye factores económicos, tecnológicos, 
+sociales y regulatorios. Para cada punto, proporciona una explicación de 2-3 frases y una 
+recomendación estratégica.`;
+
+  const exampleSocial = `Como estratega de contenido para redes sociales, crea 10 ideas de publicaciones para 
+[plataforma] para promocionar [producto/servicio]. Cada idea debe incluir: un título 
+llamativo, el texto completo para la publicación (máximo 280 caracteres), 3 hashtags 
+relevantes, y una breve descripción del tipo de imagen o video que acompañaría la 
+publicación. El tono debe ser [formal/casual/inspirador] y dirigido a [demografía].`;
+
   return (
     <div className="mt-16 prose prose-lg max-w-3xl mx-auto text-muted-foreground">
       <h2 className="text-2xl font-semibold text-foreground">Guía Completa: Cómo Usar Prompts Efectivos con ChatGPT</h2>
@@ -50,35 +81,56 @@ const PromptUsefulContent = () => {
       <h3 className="text-xl font-medium text-foreground mt-6">Ejemplos prácticos de prompts para diferentes propósitos</h3>
       
       <div className="bg-muted p-4 rounded-md mt-4">
-        <h4 className="font-medium">Para creación de contenido SEO:</h4>
+        <div className="flex justify-between items-start mb-2">
+          <h4 className="font-medium">Para creación de contenido SEO:</h4>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8" 
+            onClick={() => copyToClipboard(exampleSEO)}
+          >
+            <Copy className="h-4 w-4" />
+            <span className="sr-only">Copiar ejemplo</span>
+          </Button>
+        </div>
         <pre className="bg-background p-2 rounded text-sm overflow-x-auto">
-          "Actúa como un experto en SEO. Crea un artículo completo sobre [tema] optimizado para SEO. 
-          Incluye una introducción atractiva, al menos 5 subtítulos H2, bullet points donde sea 
-          relevante, y una conclusión. Incorpora de forma natural las siguientes palabras clave: 
-          [lista de palabras clave]. El artículo debe tener aproximadamente 1500 palabras y estar 
-          dirigido a [audiencia objetivo]."
+          {exampleSEO}
         </pre>
       </div>
       
       <div className="bg-muted p-4 rounded-md mt-4">
-        <h4 className="font-medium">Para análisis de mercado:</h4>
+        <div className="flex justify-between items-start mb-2">
+          <h4 className="font-medium">Para análisis de mercado:</h4>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8" 
+            onClick={() => copyToClipboard(exampleMarket)}
+          >
+            <Copy className="h-4 w-4" />
+            <span className="sr-only">Copiar ejemplo</span>
+          </Button>
+        </div>
         <pre className="bg-background p-2 rounded text-sm overflow-x-auto">
-          "Actúa como un analista de mercado experto en [industria]. Realiza un análisis DAFO 
-          (Debilidades, Amenazas, Fortalezas, Oportunidades) detallado para una empresa de [tipo de negocio] 
-          que quiere expandirse al mercado de [ubicación]. Incluye factores económicos, tecnológicos, 
-          sociales y regulatorios. Para cada punto, proporciona una explicación de 2-3 frases y una 
-          recomendación estratégica."
+          {exampleMarket}
         </pre>
       </div>
       
       <div className="bg-muted p-4 rounded-md mt-4">
-        <h4 className="font-medium">Para marketing en redes sociales:</h4>
+        <div className="flex justify-between items-start mb-2">
+          <h4 className="font-medium">Para marketing en redes sociales:</h4>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8" 
+            onClick={() => copyToClipboard(exampleSocial)}
+          >
+            <Copy className="h-4 w-4" />
+            <span className="sr-only">Copiar ejemplo</span>
+          </Button>
+        </div>
         <pre className="bg-background p-2 rounded text-sm overflow-x-auto">
-          "Como estratega de contenido para redes sociales, crea 10 ideas de publicaciones para 
-          [plataforma] para promocionar [producto/servicio]. Cada idea debe incluir: un título 
-          llamativo, el texto completo para la publicación (máximo 280 caracteres), 3 hashtags 
-          relevantes, y una breve descripción del tipo de imagen o video que acompañaría la 
-          publicación. El tono debe ser [formal/casual/inspirador] y dirigido a [demografía]."
+          {exampleSocial}
         </pre>
       </div>
       
