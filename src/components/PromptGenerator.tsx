@@ -13,7 +13,13 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { Copy, RefreshCw } from 'lucide-react';
+import { Copy, RefreshCw, Info } from 'lucide-react';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function PromptGenerator() {
   const { 
@@ -84,15 +90,29 @@ export default function PromptGenerator() {
       <div className="grid gap-6">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold">Generador de Prompts SEO</h2>
-          <Button 
-            variant="outline" 
-            onClick={handleUpdateKeywords} 
-            disabled={isUpdating}
-            className="flex items-center gap-2"
-          >
-            <RefreshCw className={`h-4 w-4 ${isUpdating ? 'animate-spin' : ''}`} />
-            {isUpdating ? 'Actualizando...' : 'Actualizar Keywords'}
-          </Button>
+          <div className="flex items-center gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Info className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <p>Las keywords de tendencia se actualizan automáticamente a diario a las 00:00 hrs. También puedes actualizarlas manualmente con el botón.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <Button 
+              variant="outline" 
+              onClick={handleUpdateKeywords} 
+              disabled={isUpdating}
+              className="flex items-center gap-2"
+            >
+              <RefreshCw className={`h-4 w-4 ${isUpdating ? 'animate-spin' : ''}`} />
+              {isUpdating ? 'Actualizando...' : 'Actualizar Keywords'}
+            </Button>
+          </div>
         </div>
 
         {updateStatus && (
