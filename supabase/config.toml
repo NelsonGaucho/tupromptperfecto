@@ -30,8 +30,9 @@ enabled = true
 enabled = true
 site_url = "http://localhost:3000"
 
+# The email provider configuration was causing the error
+# Removing the 'enabled' key from the [auth.email] section
 [auth.email]
-enabled = true
 
 [functions.update_trending_keywords]
 verify_jwt = false
