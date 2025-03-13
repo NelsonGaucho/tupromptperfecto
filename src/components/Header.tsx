@@ -57,7 +57,7 @@ const Header = () => {
   const tools = [
     { path: '/', name: 'Generador de Prompts' },
     { path: '/instagram-hashtags', name: 'Hashtags para Instagram' },
-    { path: '/youtube-hashtags', name: 'Hashtags para YouTube' },
+    { path: '/youtube-hashtags', name: 'Etiquetas para YouTube' },
     { path: '/x-hashtags', name: 'Hashtags para X' },
     { path: '/seo-keywords', name: 'Palabras Clave SEO' },
   ];
