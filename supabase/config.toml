@@ -38,6 +38,12 @@ enabled = true
 [functions.update_trending_keywords]
 verify_jwt = false
 
+[functions.get_instagram_hashtags]
+verify_jwt = false
+
+[functions._cron_instagram_hashtags]
+verify_jwt = false
+
 [analytics]
 enabled = false
 port = 54327

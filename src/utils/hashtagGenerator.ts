@@ -1,13 +1,13 @@
-
 import { sanitizeInput } from './security';
 import { enhanceHashtagsWithAI } from '@/services/apiService';
+import { supabase } from '@/integrations/supabase/client';
 
 // Interface for hashtag generation result
 interface HashtagResult {
   all: string[];
   popular: string[];
   niche: string[];
-  formattedForYoutube?: string; // New property for YouTube format
+  formattedForYoutube?: string; // For YouTube format
 }
 
 // Helper function to randomize array elements
@@ -37,7 +37,7 @@ const formatForYoutube = (hashtags: string[]): string => {
     .join(', ');
 };
 
-// Generate hashtags using both our algorithm and OpenAI API
+// Generate hashtags using our database, Edge Function, and OpenAI API
 export const generateHashtags = async (
   platform: 'instagram' | 'youtube' | 'twitter',
   topic: string,
@@ -45,6 +45,27 @@ export const generateHashtags = async (
 ): Promise<HashtagResult> => {
   // Sanitize the topic
   const sanitizedTopic = sanitizeInput(topic);
+  
+  // For Instagram, try to get hashtags from our database first
+  if (platform === 'instagram') {
+    try {
+      console.log(`Attempting to get Instagram hashtags for topic: ${topic} from Supabase`);
+      
+      const { data, error } = await supabase.functions.invoke('get_instagram_hashtags', {
+        body: { topic: sanitizedTopic }
+      });
+      
+      if (!error && data && data.success && data.data && data.data.all.length > 0) {
+        console.log(`Successfully retrieved ${data.data.all.length} Instagram hashtags`);
+        return data.data;
+      }
+      
+      console.log("No Instagram hashtags found in database or empty result, falling back to AI");
+    } catch (error) {
+      console.error("Error getting Instagram hashtags:", error);
+      console.log("Falling back to AI generation");
+    }
+  }
   
   // Try to enhance hashtags with AI first
   try {
@@ -83,7 +104,7 @@ export const generateHashtags = async (
     console.log("Falling back to algorithm");
   }
   
-  // Fall back to the original algorithm if AI fails
+  // Fall back to the original algorithm if all else fails
   
   // Set platform-specific variables
   const maxHashtags = platform === 'instagram' ? 30 : platform === 'youtube' ? 15 : 10;

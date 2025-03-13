@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      instagram_hashtags: {
+        Row: {
+          created_at: string
+          hashtags: Json
+          id: string
+          keyword: string
+          last_updated: string
+          source: string
+          trending_score: number | null
+        }
+        Insert: {
+          created_at?: string
+          hashtags: Json
+          id?: string
+          keyword: string
+          last_updated?: string
+          source: string
+          trending_score?: number | null
+        }
+        Update: {
+          created_at?: string
+          hashtags?: Json
+          id?: string
+          keyword?: string
+          last_updated?: string
+          source?: string
+          trending_score?: number | null
+        }
+        Relationships: []
+      }
       prompt_categories: {
         Row: {
           created_at: string

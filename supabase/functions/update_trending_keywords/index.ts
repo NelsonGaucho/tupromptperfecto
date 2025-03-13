@@ -1,57 +1,80 @@
 
-// Importar los módulos necesarios
+// Import the necessary modules
 import { corsHeaders } from './db/supabaseClient.ts';
 import { updateTrendingKeywords } from './db/keywordsRepository.ts';
+import { updateInstagramHashtags } from './db/instagramRepository.ts';
 import { generatePromptTemplates } from './db/templatesRepository.ts';
 import { getGoogleTrendsKeywords } from './sources/googleTrends.ts';
 import { getRedditKeywords } from './sources/reddit.ts';
 import { getAnswerThePublicKeywords } from './sources/answerThePublic.ts';
+import { getInstagramHashtags } from './sources/instagram.ts';
 
-// Función principal que maneja las peticiones
+// Main function that handles the requests
 Deno.serve(async (req) => {
-  // Manejar preflight CORS
+  // Handle preflight CORS
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
   }
   
   if (req.method === 'POST') {
     try {
-      console.log('Iniciando actualización de keywords y templates')
+      console.log('Starting update of keywords, templates, and Instagram hashtags')
       
-      // 1. Obtener keywords de diferentes fuentes
-      const googleTrendsKeywords = await getGoogleTrendsKeywords()
-      console.log(`Obtenidas ${googleTrendsKeywords.length} keywords de Google Trends`)
+      // Parse request body if present
+      let requestBody = {};
+      try {
+        const requestText = await req.text();
+        if (requestText) {
+          requestBody = JSON.parse(requestText);
+        }
+      } catch (e) {
+        console.log('No request body or invalid JSON');
+      }
       
-      const redditKeywords = await getRedditKeywords()
-      console.log(`Obtenidas ${redditKeywords.length} keywords de Reddit`)
+      const keywordQuery = requestBody.keyword || 'social media';
       
-      const atpKeywords = await getAnswerThePublicKeywords()
-      console.log(`Obtenidas ${atpKeywords.length} keywords de AnswerThePublic`)
+      // 1. Get keywords from different sources
+      const googleTrendsKeywords = await getGoogleTrendsKeywords();
+      console.log(`Obtained ${googleTrendsKeywords.length} keywords from Google Trends`);
       
-      // 2. Combinar todas las keywords
+      const redditKeywords = await getRedditKeywords();
+      console.log(`Obtained ${redditKeywords.length} keywords from Reddit`);
+      
+      const atpKeywords = await getAnswerThePublicKeywords();
+      console.log(`Obtained ${atpKeywords.length} keywords from AnswerThePublic`);
+      
+      // Get Instagram hashtags specifically for the requested keyword
+      const instagramHashtags = await getInstagramHashtags(keywordQuery);
+      console.log(`Obtained ${instagramHashtags.length} hashtags from Instagram sources`);
+      
+      // 2. Combine all keywords
       const allKeywords = [
         ...googleTrendsKeywords,
         ...redditKeywords,
         ...atpKeywords
-      ]
+      ];
       
-      console.log(`Total de ${allKeywords.length} keywords obtenidas`)
+      console.log(`Total of ${allKeywords.length} keywords obtained`);
       
-      // 3. Actualizar la base de datos
-      await updateTrendingKeywords(allKeywords)
+      // 3. Update the database
+      await updateTrendingKeywords(allKeywords);
       
-      // 4. Generar templates si no existen
-      await generatePromptTemplates()
+      // 4. Update Instagram hashtags separately
+      await updateInstagramHashtags(instagramHashtags);
+      
+      // 5. Generate templates if they don't exist
+      await generatePromptTemplates();
       
       return new Response(
         JSON.stringify({
           success: true,
-          message: 'Actualización completada',
+          message: 'Update completed',
           stats: {
             googleTrends: googleTrendsKeywords.length,
             reddit: redditKeywords.length,
             answerThePublic: atpKeywords.length,
-            total: allKeywords.length
+            instagram: instagramHashtags.length,
+            total: allKeywords.length + instagramHashtags.length
           }
         }),
         {
@@ -63,7 +86,7 @@ Deno.serve(async (req) => {
         }
       )
     } catch (error) {
-      console.error('Error en la función edge:', error)
+      console.error('Error in edge function:', error);
       return new Response(
         JSON.stringify({
           success: false,
@@ -83,7 +106,7 @@ Deno.serve(async (req) => {
   return new Response(
     JSON.stringify({
       success: false,
-      error: 'Método no permitido'
+      error: 'Method not allowed'
     }),
     {
       headers: {
