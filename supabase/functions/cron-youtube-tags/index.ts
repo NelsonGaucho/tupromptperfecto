@@ -1,5 +1,5 @@
 
-// Deno edge function to be called by a scheduled job to update Instagram hashtags
+// Deno edge function to be called by a scheduled job to update YouTube tags
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.7';
 
 // Define CORS headers for the entire application
@@ -13,14 +13,14 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-// Function to call the update_trending_keywords endpoint
-async function updateTrendingKeywords() {
+// Function to call the update_youtube_tags endpoint
+async function updateYouTubeTags() {
   try {
-    console.log('Starting scheduled update of trending keywords and Instagram hashtags');
+    console.log('Starting scheduled update of YouTube tags');
     
-    // Call the update_trending_keywords function
+    // Call the update_youtube_tags function
     const response = await fetch(
-      `${supabaseUrl}/functions/v1/update_trending_keywords`,
+      `${supabaseUrl}/functions/v1/update_youtube_tags`,
       {
         method: 'POST',
         headers: {
@@ -33,15 +33,15 @@ async function updateTrendingKeywords() {
     
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Failed to update trending keywords: ${response.statusText}. Details: ${errorText}`);
+      throw new Error(`Failed to update YouTube tags: ${response.statusText}. Details: ${errorText}`);
     }
     
     const result = await response.json();
-    console.log('Update completed successfully:', result);
+    console.log('YouTube tags update completed successfully:', result);
     
     return { success: true, ...result };
   } catch (error) {
-    console.error('Error in scheduled update:', error);
+    console.error('Error in scheduled YouTube tags update:', error);
     return { success: false, error: error.message };
   }
 }
@@ -54,13 +54,13 @@ Deno.serve(async (req) => {
   }
 
   // Log request information for debugging
-  console.log(`Received ${req.method} request to cron-instagram-hashtags`);
+  console.log(`Received ${req.method} request to cron-youtube-tags`);
   
   if (req.method === 'POST') {
     try {
-      console.log('Executing scheduled hashtag update task...');
+      console.log('Executing scheduled YouTube tags update task...');
       const startTime = Date.now();
-      const result = await updateTrendingKeywords();
+      const result = await updateYouTubeTags();
       const executionTime = Date.now() - startTime;
       
       console.log(`Task completed in ${executionTime}ms. Success: ${result.success}`);
