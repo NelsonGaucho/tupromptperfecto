@@ -30,15 +30,17 @@ enabled = true
 enabled = true
 site_url = "http://localhost:3000"
 
-[auth.email]
+# Changed from [auth.email] with enabled = true
+[[auth.email.flows]]
+type = "signup"
 enabled = true
+
+# Changed from [[functions]] with name and verify_jwt
+[functions.update_trending_keywords]
+verify_jwt = false
 
 [analytics]
 enabled = false
 port = 54327
 vector_port = 54328
 backend = "postgres"
-
-[[functions]]
-name = "update_trending_keywords"
-verify_jwt = false
