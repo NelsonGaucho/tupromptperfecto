@@ -169,6 +169,36 @@ export type Database = {
           },
         ]
       }
+      youtube_tags: {
+        Row: {
+          created_at: string
+          id: string
+          keyword: string
+          last_updated: string
+          source: string
+          tags: Json
+          trending_score: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          keyword: string
+          last_updated?: string
+          source: string
+          tags: Json
+          trending_score?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          keyword?: string
+          last_updated?: string
+          source?: string
+          tags?: Json
+          trending_score?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

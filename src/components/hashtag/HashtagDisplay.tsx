@@ -29,10 +29,44 @@ const HashtagDisplay = ({
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
+    // Mensaje adaptado para YouTube
+    const successMessage = platform === 'youtube'
+      ? "Las etiquetas se han copiado correctamente"
+      : "Los hashtags se han copiado correctamente";
+    
     toast({
       title: "Copiado al portapapeles",
-      description: "Los hashtags se han copiado correctamente",
+      description: successMessage,
     });
+  };
+
+  // Textos adaptados para YouTube
+  const getTitle = () => {
+    return platform === 'youtube' ? "Etiquetas generadas" : "Hashtags generados";
+  };
+
+  const getYouTubeFormatTitle = () => {
+    return "Etiquetas para YouTube (formato recomendado)";
+  };
+
+  const getYouTubeFormatButtonText = () => {
+    return "Copiar etiquetas para YouTube";
+  };
+
+  const getPopularTitle = () => {
+    return platform === 'youtube' ? "Etiquetas populares" : "Hashtags populares";
+  };
+
+  const getPopularButtonText = () => {
+    return platform === 'youtube' ? "Copiar etiquetas populares" : "Copiar hashtags populares";
+  };
+
+  const getNicheTitle = () => {
+    return platform === 'youtube' ? "Etiquetas de nicho" : "Hashtags de nicho";
+  };
+
+  const getNicheButtonText = () => {
+    return platform === 'youtube' ? "Copiar etiquetas de nicho" : "Copiar hashtags de nicho";
   };
 
   if (hashtags.length === 0) {
@@ -42,7 +76,7 @@ const HashtagDisplay = ({
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Hashtags generados</h2>
+        <h2 className="text-xl font-semibold">{getTitle()}</h2>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -56,7 +90,7 @@ const HashtagDisplay = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Regenerar hashtags</p>
+              <p>Regenerar {platform === 'youtube' ? 'etiquetas' : 'hashtags'}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -66,7 +100,7 @@ const HashtagDisplay = ({
         <CardContent className="p-6">
           {platform === 'youtube' && youtubeFormattedHashtags && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">Hashtags para YouTube (formato recomendado)</h3>
+              <h3 className="text-lg font-semibold mb-3">{getYouTubeFormatTitle()}</h3>
               <div className="bg-muted p-4 rounded-md">
                 <p className="break-words">{youtubeFormattedHashtags}</p>
               </div>
@@ -76,7 +110,7 @@ const HashtagDisplay = ({
                 onClick={() => copyToClipboard(youtubeFormattedHashtags)}
               >
                 <Copy className="h-4 w-4 mr-2" />
-                Copiar hashtags para YouTube
+                {getYouTubeFormatButtonText()}
               </Button>
             </div>
           )}
@@ -118,7 +152,7 @@ const HashtagDisplay = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="bg-background border-border shadow-sm">
           <CardContent className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Hashtags populares</h3>
+            <h3 className="text-lg font-semibold mb-4">{getPopularTitle()}</h3>
             <div className="flex flex-wrap gap-2">
               {popularHashtags.map((tag, index) => (
                 <div 
@@ -137,14 +171,14 @@ const HashtagDisplay = ({
               onClick={() => copyToClipboard(popularHashtags.map(tag => (tag.startsWith('#') ? tag : `#${tag}`)).join(' '))}
             >
               <Copy className="h-4 w-4 mr-2" />
-              Copiar hashtags populares
+              {getPopularButtonText()}
             </Button>
           </CardContent>
         </Card>
         
         <Card className="bg-background border-border shadow-sm">
           <CardContent className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Hashtags de nicho</h3>
+            <h3 className="text-lg font-semibold mb-4">{getNicheTitle()}</h3>
             <div className="flex flex-wrap gap-2">
               {nicheHashtags.map((tag, index) => (
                 <div 
@@ -163,7 +197,7 @@ const HashtagDisplay = ({
               onClick={() => copyToClipboard(nicheHashtags.map(tag => (tag.startsWith('#') ? tag : `#${tag}`)).join(' '))}
             >
               <Copy className="h-4 w-4 mr-2" />
-              Copiar hashtags de nicho
+              {getNicheButtonText()}
             </Button>
           </CardContent>
         </Card>

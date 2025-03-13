@@ -14,7 +14,11 @@ const HashtagTips = ({ platform }: HashtagTipsProps) => {
 
   return (
     <div className="text-sm text-muted-foreground bg-muted p-4 rounded-lg">
-      <p className="font-medium mb-2">Consejos para usar hashtags en {platformTitle[platform]}:</p>
+      <p className="font-medium mb-2">
+        {platform === 'youtube' 
+          ? `Consejos para usar etiquetas en ${platformTitle[platform]}:` 
+          : `Consejos para usar hashtags en ${platformTitle[platform]}:`}
+      </p>
       <ul className="list-disc list-inside space-y-1">
         {platform === 'instagram' && (
           <>
@@ -26,11 +30,11 @@ const HashtagTips = ({ platform }: HashtagTipsProps) => {
         )}
         {platform === 'youtube' && (
           <>
-            <li>YouTube permite hasta 15 hashtags por video.</li>
-            <li>Los primeros 3 hashtags aparecerán sobre el título del video.</li>
-            <li>Utiliza el formato de hashtags separados por comas sin el símbolo #.</li>
-            <li>Usa hashtags específicos relacionados con el contenido de tu video.</li>
-            <li>No uses demasiados hashtags para evitar parecer spam.</li>
+            <li>YouTube permite hasta 15 etiquetas por video.</li>
+            <li>Los primeras 3 etiquetas aparecerán sobre el título del video.</li>
+            <li>Utiliza el formato de etiquetas separadas por comas sin el símbolo #.</li>
+            <li>Usa etiquetas específicas relacionadas con el contenido de tu video.</li>
+            <li>No uses demasiadas etiquetas para evitar parecer spam.</li>
           </>
         )}
         {platform === 'twitter' && (

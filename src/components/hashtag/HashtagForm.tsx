@@ -42,6 +42,14 @@ const HashtagForm = ({ platform, onHashtagsGenerated, setLoading, loading }: Has
     },
   };
 
+  // Cambiar el texto del botón para YouTube a "Etiquetas"
+  const getButtonText = (platform: SocialPlatform) => {
+    if (platform === 'youtube') {
+      return loading ? 'Generando etiquetas...' : `Generar etiquetas para ${platformConfig[platform].title}`;
+    }
+    return loading ? 'Generando hashtags...' : `Generar hashtags para ${platformConfig[platform].title}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -72,15 +80,26 @@ const HashtagForm = ({ platform, onHashtagsGenerated, setLoading, loading }: Has
         result.formattedForYoutube
       );
       
+      // Mensaje adaptado para YouTube
+      const successMessage = platform === 'youtube' 
+        ? `Se han generado ${result.all.length} etiquetas para ${platformConfig[platform].title}`
+        : `Se han generado ${result.all.length} hashtags para ${platformConfig[platform].title}`;
+      
       toast({
-        title: "¡Hashtags generados!",
-        description: `Se han generado ${result.all.length} hashtags para ${platformConfig[platform].title}`,
+        title: platform === 'youtube' ? "¡Etiquetas generadas!" : "¡Hashtags generados!",
+        description: successMessage,
       });
     } catch (error) {
       console.error('Error generating hashtags:', error);
+      
+      // Mensaje de error adaptado para YouTube
+      const errorMessage = platform === 'youtube'
+        ? "Ocurrió un error al generar las etiquetas. Por favor, inténtalo de nuevo."
+        : "Ocurrió un error al generar los hashtags. Por favor, inténtalo de nuevo.";
+      
       toast({
         title: "Error",
-        description: "Ocurrió un error al generar los hashtags. Por favor, inténtalo de nuevo.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -127,10 +146,12 @@ const HashtagForm = ({ platform, onHashtagsGenerated, setLoading, loading }: Has
               className="w-full"
             >
               {platformConfig[platform].icon}
-              {loading ? 'Generando hashtags...' : `Generar hashtags para ${platformConfig[platform].title}`}
+              {getButtonText(platform)}
             </Button>
             <p className="text-xs text-muted-foreground mt-2 text-center">
-              Máximo recomendado: {platformConfig[platform].maxHashtags} hashtags para {platformConfig[platform].title}
+              {platform === 'youtube' 
+                ? `Máximo recomendado: ${platformConfig[platform].maxHashtags} etiquetas para ${platformConfig[platform].title}` 
+                : `Máximo recomendado: ${platformConfig[platform].maxHashtags} hashtags para ${platformConfig[platform].title}`}
             </p>
           </div>
         </form>

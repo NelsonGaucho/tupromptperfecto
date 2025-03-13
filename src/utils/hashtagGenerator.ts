@@ -1,10 +1,10 @@
-
 import { sanitizeInput } from './security';
 import { enhanceHashtagsWithAI } from '@/services/apiService';
 import { supabase } from '@/integrations/supabase/client';
 import { formatForYoutube } from './hashtagUtils';
 import { generateFallbackHashtags } from './hashtagFallback';
 import { HashtagResult } from '@/types/hashtag';
+import { getYouTubeTags } from '@/services/youtubeTagsService';
 
 // Generate hashtags using our database, Edge Function, and OpenAI API
 export const generateHashtags = async (
@@ -33,6 +33,25 @@ export const generateHashtags = async (
     } catch (error) {
       console.error("Error getting Instagram hashtags:", error);
       console.log("Falling back to AI generation");
+    }
+  }
+  
+  // For YouTube, use our specialized YouTube tags service
+  if (platform === 'youtube') {
+    try {
+      console.log(`Intentando obtener etiquetas de YouTube para: ${topic}`);
+      
+      const youtubeResult = await getYouTubeTags(sanitizedTopic);
+      
+      if (youtubeResult.success && youtubeResult.data && youtubeResult.data.all.length > 0) {
+        console.log(`Se obtuvieron ${youtubeResult.data.all.length} etiquetas para YouTube`);
+        return youtubeResult.data as HashtagResult;
+      }
+      
+      console.log("No se obtuvieron etiquetas para YouTube, using fallback");
+    } catch (error) {
+      console.error("Error obteniendo etiquetas para YouTube:", error);
+      console.log("Usando fallback para generar etiquetas");
     }
   }
   

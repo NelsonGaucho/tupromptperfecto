@@ -5,3 +5,4 @@ export { getOpenAIKey } from './apiUtils';
 export { enhanceHashtagsWithAI } from './hashtagService';
 export { enhanceKeywordsWithAI } from './keywordService';
 export { queryChatGPT } from './chatService';
+export { getYouTubeTags, refreshYouTubeTags } from './youtubeTagsService';
