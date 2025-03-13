@@ -143,7 +143,6 @@ export const refreshYouTubeTags = async (keyword: string): Promise<ApiResponse> 
     
     return {
       success: true,
-      message: 'Etiquetas actualizadas correctamente',
       data
     };
   } catch (error) {

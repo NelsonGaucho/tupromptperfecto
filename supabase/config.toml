@@ -40,7 +40,7 @@ verify_jwt = false
 [functions.get_instagram_hashtags]
 verify_jwt = false
 
-[functions._cron_instagram_hashtags]
+[functions.cron-instagram-hashtags]
 verify_jwt = false
 
 [analytics]
