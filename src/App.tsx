@@ -15,6 +15,8 @@ import TermsAndConditions from "./pages/TermsAndConditions";
 import LegalNotice from "./pages/LegalNotice";
 import NotFound from "./pages/NotFound";
 import ApiSettings from "./pages/ApiSettings";
+import AboutUs from "./pages/AboutUs";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +39,8 @@ const App = () => (
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
             <Route path="/legal-notice" element={<LegalNotice />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/contact" element={<Contact />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

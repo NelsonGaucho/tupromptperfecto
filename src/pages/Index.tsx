@@ -4,6 +4,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PromptGenerator from '@/components/PromptGenerator';
+import PromptUsefulContent from '@/components/prompt/PromptUsefulContent';
 
 const Index = () => {
   const { t } = useTranslation();
@@ -22,6 +23,8 @@ const Index = () => {
         </section>
 
         <PromptGenerator />
+        
+        <PromptUsefulContent />
       </main>
       <Footer />
     </div>

@@ -1,49 +1,41 @@
-
 import React from 'react';
-import { LanguageProvider } from '@/hooks/useTranslation';
+import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import HashtagGenerator from '@/components/HashtagGenerator';
-import AdSenseAd from '@/components/AdSenseAd';
-import { setupSecurity } from '@/utils/security';
-import InstagramHashtagsSEO from '@/components/seo/InstagramHashtagsSEO';
 import InstagramIntro from '@/components/instagram/InstagramIntro';
+import HashtagGenerator from '@/components/HashtagGenerator';
 import InstagramInfo from '@/components/instagram/InstagramInfo';
 import InstagramAdvancedTips from '@/components/instagram/InstagramAdvancedTips';
+import InstagramHashtagsSEO from '@/components/seo/InstagramHashtagsSEO';
+import InstagramUsefulContent from '@/components/instagram/InstagramUsefulContent';
 
 const InstagramHashtags = () => {
-  // Set up security measures when component mounts
-  React.useEffect(() => {
-    setupSecurity();
-  }, []);
-
   return (
-    <LanguageProvider>
-      <div className="min-h-screen flex flex-col bg-background">
-        <InstagramHashtagsSEO />
-        <Header />
+    <div className="flex flex-col min-h-screen">
+      <InstagramHashtagsSEO />
+      <Header />
+      <main className="flex-grow p-4 sm:p-6 md:p-8 container max-w-7xl mx-auto">
+        <section className="mb-8">
+          <h1 className="text-4xl font-extrabold text-center mb-4">
+            Generador de Hashtags para Instagram
+          </h1>
+          <p className="text-lg text-center text-muted-foreground mb-8">
+            Crea hashtags optimizados para aumentar el alcance de tus publicaciones en Instagram
+          </p>
+        </section>
+
+        <InstagramIntro />
         
-        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12">
-          {/* Top ad */}
-          <AdSenseAd adSlot="3456789012" className="mb-8" />
-          
-          <InstagramIntro />
-          
-          <InstagramInfo />
-          
-          <div className="animate-slide-in-up opacity-0 [animation-delay:0.3s] [animation-fill-mode:forwards]">
-            <HashtagGenerator platform="instagram" />
-          </div>
-          
-          <InstagramAdvancedTips />
-          
-          {/* Bottom ad */}
-          <AdSenseAd adSlot="5678901234" className="mt-8" />
-        </main>
+        <section className="my-8">
+          <HashtagGenerator platform="instagram" />
+        </section>
         
-        <Footer />
-      </div>
-    </LanguageProvider>
+        <InstagramInfo />
+        <InstagramAdvancedTips />
+        <InstagramUsefulContent />
+      </main>
+      <Footer />
+    </div>
   );
 };
 

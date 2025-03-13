@@ -1,50 +1,41 @@
-
-import { useState, useEffect } from 'react';
-import { useTranslation } from '@/hooks/useTranslation';
-import { LanguageProvider } from '@/hooks/useTranslation';
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import HashtagGenerator from '@/components/HashtagGenerator';
-import { setupSecurity } from '@/utils/security';
-import AdSenseAd from '@/components/AdSenseAd';
 import YoutubeEtiquetasSEO from '@/components/seo/YoutubeEtiquetasSEO';
 import YouTubeIntro from '@/components/youtube/YouTubeIntro';
 import YouTubeInfo from '@/components/youtube/YouTubeInfo';
 import YouTubeAdvancedTips from '@/components/youtube/YouTubeAdvancedTips';
+import YouTubeUsefulContent from '@/components/youtube/YouTubeUsefulContent';
 
 const YoutubeHashtags = () => {
-  // Set up security measures when the component mounts
-  useEffect(() => {
-    setupSecurity();
-  }, []);
-
   return (
-    <LanguageProvider>
-      <div className="min-h-screen flex flex-col bg-background">
-        <YoutubeEtiquetasSEO />
-        <Header />
+    <div className="flex flex-col min-h-screen">
+      <YoutubeEtiquetasSEO />
+      <Header />
+      <main className="flex-grow p-4 sm:p-6 md:p-8 container max-w-7xl mx-auto">
+        <section className="mb-8">
+          <h1 className="text-4xl font-extrabold text-center mb-4">
+            Generador de Etiquetas para YouTube
+          </h1>
+          <p className="text-lg text-center text-muted-foreground mb-8">
+            Crea etiquetas optimizadas para aumentar las visualizaciones de tus videos en YouTube
+          </p>
+        </section>
         
-        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12">
-          {/* Top ad */}
-          <AdSenseAd adSlot="3456789012" className="mb-8" />
-          
-          <YouTubeIntro />
-          
-          <YouTubeInfo />
-          
-          <div className="animate-slide-in-up opacity-0 [animation-delay:0.3s] [animation-fill-mode:forwards]">
-            <HashtagGenerator platform="youtube" />
-          </div>
-          
-          <YouTubeAdvancedTips />
-          
-          {/* Bottom ad */}
-          <AdSenseAd adSlot="9876543210" className="mt-8" />
-        </main>
+        <YouTubeIntro />
         
-        <Footer />
-      </div>
-    </LanguageProvider>
+        <section className="my-8">
+          <HashtagGenerator platform="youtube" />
+        </section>
+        
+        <YouTubeInfo />
+        <YouTubeAdvancedTips />
+        <YouTubeUsefulContent />
+      </main>
+      <Footer />
+    </div>
   );
 };
 
