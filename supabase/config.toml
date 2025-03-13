@@ -30,12 +30,11 @@ enabled = true
 enabled = true
 site_url = "http://localhost:3000"
 
-# Changed from [auth.email] with enabled = true
-[[auth.email.flows]]
-type = "signup"
+# Fix for the invalid config syntax
+[auth.email]
 enabled = true
+# Remove the nested [[auth.email.flows]] structure
 
-# Changed from [[functions]] with name and verify_jwt
 [functions.update_trending_keywords]
 verify_jwt = false
 
