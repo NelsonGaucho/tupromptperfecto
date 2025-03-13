@@ -1,6 +1,7 @@
 
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import translations from '../i18n/translations';
+import { TranslationsType } from '../i18n/languages';
 
 type LanguageContextType = {
   language: string;
