@@ -22,20 +22,34 @@ async function getYouTubeAutocompleteTags(keyword: string): Promise<YouTubeTag[]
       }
     });
     
+    if (!response.ok) {
+      console.error(`Error en la respuesta de autocomplete: ${response.status} ${response.statusText}`);
+      return [];
+    }
+    
     const text = await response.text();
     
-    // El resultado viene como una función de callback con un array JSON
-    const jsonString = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
-    const data = JSON.parse(jsonString);
+    if (!text || text.length === 0) {
+      console.log('Respuesta vacía de autocomplete');
+      return [];
+    }
     
-    if (Array.isArray(data) && data.length > 1 && Array.isArray(data[1])) {
-      const suggestions = data[1];
+    try {
+      // El resultado viene como una función de callback con un array JSON
+      const jsonString = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
+      const data = JSON.parse(jsonString);
       
-      return suggestions.map((suggestion: string) => ({
-        tag: suggestion.trim(),
-        source: 'youtube_autocomplete',
-        trending_score: 0.85 // Alta puntuación para las sugerencias directas de YouTube
-      }));
+      if (Array.isArray(data) && data.length > 1 && Array.isArray(data[1])) {
+        const suggestions = data[1];
+        
+        return suggestions.map((suggestion: string) => ({
+          tag: suggestion.trim(),
+          source: 'youtube_autocomplete',
+          trending_score: 0.85 // Alta puntuación para las sugerencias directas de YouTube
+        }));
+      }
+    } catch (parseError) {
+      console.error('Error al analizar la respuesta de autocomplete:', parseError);
     }
     
     return [];
@@ -82,8 +96,13 @@ async function getYouTubePopularTags(keyword: string): Promise<YouTubeTag[]> {
 }
 
 // Función para guardar las etiquetas en la base de datos
-async function saveTagsToDatabase(keyword: string, tags: YouTubeTag[]): Promise<void> {
+async function saveTagsToDatabase(keyword: string, tags: YouTubeTag[]): Promise<boolean> {
   console.log(`Guardando ${tags.length} etiquetas para: ${keyword}`);
+  
+  if (!tags || tags.length === 0) {
+    console.log('No hay etiquetas para guardar');
+    return false;
+  }
   
   try {
     // Transformar las etiquetas al formato adecuado para la base de datos
@@ -91,9 +110,15 @@ async function saveTagsToDatabase(keyword: string, tags: YouTubeTag[]): Promise<
     
     // Para cada fuente, guardar las etiquetas correspondientes
     const sources = [...new Set(tags.map(tag => tag.source))];
+    let savedSuccessfully = false;
     
     for (const source of sources) {
       const sourceTags = tags.filter(tag => tag.source === source);
+      
+      if (!sourceTags || sourceTags.length === 0) {
+        continue;
+      }
+      
       const averageTrendingScore = sourceTags.reduce((sum, tag) => sum + (tag.trending_score || 0), 0) / sourceTags.length;
       
       const tagsToSave = sourceTags.map(tag => tag.tag);
@@ -112,14 +137,22 @@ async function saveTagsToDatabase(keyword: string, tags: YouTubeTag[]): Promise<
         });
       
       if (error) {
-        throw error;
+        console.error(`Error al guardar etiquetas para fuente ${source}:`, error);
+      } else {
+        savedSuccessfully = true;
       }
     }
     
-    console.log(`Etiquetas guardadas correctamente para: ${keyword}`);
+    if (savedSuccessfully) {
+      console.log(`Etiquetas guardadas correctamente para: ${keyword}`);
+      return true;
+    } else {
+      console.log(`No se pudieron guardar etiquetas para: ${keyword}`);
+      return false;
+    }
   } catch (error) {
     console.error('Error al guardar etiquetas en la base de datos:', error);
-    throw error;
+    return false;
   }
 }
 
@@ -135,6 +168,11 @@ async function updateYouTubeTags(keyword?: string): Promise<YouTubeTag[]> {
     let allTags: YouTubeTag[] = [];
     
     for (const kw of keywords) {
+      if (!kw || kw.trim() === '') {
+        console.log('Palabra clave vacía, omitiendo');
+        continue;
+      }
+      
       console.log(`Procesando palabra clave: ${kw}`);
       
       // Obtener etiquetas de diferentes fuentes
@@ -144,21 +182,28 @@ async function updateYouTubeTags(keyword?: string): Promise<YouTubeTag[]> {
       // Combinar todas las etiquetas
       const combinedTags = [...autocompleteTags, ...popularTags];
       
+      if (combinedTags.length === 0) {
+        console.log(`No se encontraron etiquetas para: ${kw}`);
+        continue;
+      }
+      
       // Eliminar duplicados
       const uniqueTags = Array.from(
         new Map(combinedTags.map(tag => [tag.tag.toLowerCase(), tag])).values()
       );
       
       // Guardar en la base de datos
-      await saveTagsToDatabase(kw, uniqueTags);
+      const saved = await saveTagsToDatabase(kw, uniqueTags);
       
-      allTags = [...allTags, ...uniqueTags];
+      if (saved) {
+        allTags = [...allTags, ...uniqueTags];
+      }
     }
     
     return allTags;
   } catch (error) {
     console.error('Error al actualizar etiquetas de YouTube:', error);
-    throw error;
+    return [];
   }
 }
 

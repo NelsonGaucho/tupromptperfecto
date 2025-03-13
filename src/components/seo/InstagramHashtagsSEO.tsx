@@ -1,67 +1,56 @@
-
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const InstagramHashtagsSEO = () => {
-  React.useEffect(() => {
-    // Set page-specific metadata
-    document.title = "Generador de Hashtags para Instagram | Aumenta Tu Alcance | TuPromptPerfecto";
-    
-    // Add page-specific meta tags with enhanced SEO
-    const metaTags = [
-      { name: 'description', content: 'Genera los mejores hashtags para aumentar el alcance y engagement de tus publicaciones en Instagram con nuestra herramienta gratuita. Optimiza tu estrategia de Instagram con hashtags efectivos.' },
-      { name: 'keywords', content: 'generador de hashtags instagram, hashtags instagram, instagram marketing, hashtags populares instagram, aumentar engagement instagram, herramienta hashtags, instagram algorithm, instagram reach, hashtags en español, instagram engagement' },
-      { property: 'og:title', content: 'Generador de Hashtags para Instagram | Aumenta Tu Alcance | TuPromptPerfecto' },
-      { property: 'og:description', content: 'Genera los hashtags perfectos para Instagram y aumenta tu alcance y engagement. Herramienta gratuita para optimizar tus publicaciones.' },
-      { property: 'og:type', content: 'website' },
-      { property: 'og:url', content: window.location.href },
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: 'Generador de Hashtags para Instagram | Aumenta Tu Alcance' },
-      { name: 'twitter:description', content: 'Genera los hashtags perfectos para Instagram y aumenta tu alcance y engagement. Herramienta gratuita de TuPromptPerfecto.' },
-      { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' },
-      { name: 'canonical', content: window.location.href },
-      { name: 'author', content: 'TuPromptPerfecto' },
-      { name: 'language', content: 'Spanish' },
-      { property: 'og:locale', content: 'es_ES' },
-    ];
-    
-    metaTags.forEach(tag => {
-      let meta = document.querySelector(`meta[${Object.keys(tag)[0]}="${Object.keys(tag)[1]}"]`);
-      if (!meta) {
-        meta = document.createElement('meta');
-        meta.setAttribute(Object.keys(tag)[0], Object.values(tag)[0] as string);
-        meta.setAttribute(Object.keys(tag)[1], Object.values(tag)[1] as string);
-        document.head.appendChild(meta);
-      } else {
-        meta.setAttribute(Object.values(tag)[0] as string, Object.values(tag)[1] as string);
-      }
-    });
-    
-    // Add structured data for SEO
-    const structuredData = {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Generador de Hashtags para Instagram",
-      "description": "Herramienta gratuita para crear hashtags optimizados para Instagram y aumentar el alcance y engagement de tus publicaciones.",
-      "applicationCategory": "UtilityApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "EUR"
-      },
-      "author": {
-        "@type": "Organization",
-        "name": "TuPromptPerfecto"
-      }
-    };
-    
-    const scriptTag = document.createElement('script');
-    scriptTag.type = 'application/ld+json';
-    scriptTag.text = JSON.stringify(structuredData);
-    document.head.appendChild(scriptTag);
-  }, []);
-
-  return null;
+  return (
+    <Helmet>
+      <title>Generador de Hashtags para Instagram | Aumenta tu alcance | TuPromptPerfecto</title>
+      <meta name="description" content="Genera hashtags optimizados para Instagram. Herramienta gratuita para mejorar la visibilidad de tus publicaciones y aumentar seguidores y likes." />
+      <meta name="keywords" content="Instagram, hashtags, generador de hashtags, SEO Instagram, visibilidad, alcance, creador de contenido, post tags, instagram post, aumentar seguidores, likes" />
+      
+      {/* Open Graph / Facebook */}
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={window.location.href} />
+      <meta property="og:title" content="Generador de Hashtags para Instagram | Aumenta tu alcance | TuPromptPerfecto" />
+      <meta property="og:description" content="Herramienta gratuita para generar los hashtags perfectos para Instagram y mejorar la visibilidad de tus publicaciones. Aumenta tus seguidores y likes." />
+      
+      {/* Twitter */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Generador de Hashtags para Instagram | Aumenta tu alcance" />
+      <meta name="twitter:description" content="Herramienta gratuita para generar los hashtags perfectos para Instagram y mejorar la visibilidad de tus publicaciones." />
+      
+      {/* Canonical */}
+      <link rel="canonical" href={window.location.href} />
+      
+      {/* Additional SEO */}
+      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      <meta name="author" content="TuPromptPerfecto" />
+      <meta name="language" content="Spanish" />
+      <meta property="og:locale" content="es_ES" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      
+      {/* Schema.org structured data */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "Generador de Hashtags para Instagram",
+          "description": "Herramienta gratuita para crear hashtags optimizados para Instagram y mejorar la visibilidad de tus publicaciones.",
+          "applicationCategory": "UtilityApplication",
+          "operatingSystem": "Web",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR"
+          },
+          "author": {
+            "@type": "Organization",
+            "name": "TuPromptPerfecto"
+          }
+        })}
+      </script>
+    </Helmet>
+  );
 };
 
 export default InstagramHashtagsSEO;
